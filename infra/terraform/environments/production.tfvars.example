@@ -1,0 +1,5 @@
+aws_region       = "us-east-1"
+environment      = "production"
+enable_rds_proxy = true
+
+# Production uses isolated queues and secrets — never share with staging/dev

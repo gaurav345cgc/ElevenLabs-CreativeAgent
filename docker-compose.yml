@@ -1,0 +1,24 @@
+# Local PostgreSQL for migration development and tests.
+# Start: docker compose up -d
+# URL:   postgresql://creative_agent:creative_agent@localhost:5432/creative_agent
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: creative-agent-postgres
+    environment:
+      POSTGRES_USER: creative_agent
+      POSTGRES_PASSWORD: creative_agent
+      POSTGRES_DB: creative_agent
+    ports:
+      - "5432:5432"
+    volumes:
+      - creative_agent_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U creative_agent -d creative_agent"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  creative_agent_pgdata:

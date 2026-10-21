@@ -1,0 +1,7 @@
+
+terraform apply `
+  -var-file=environments/dev.tfvars `
+  -var="db_secret_password=arn:aws:secretsmanager:us-east-1:754639201125:secret:creative-agent-dev/database-GTuNOP" `
+  -var="model_provider_api_key=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" `
+  -var="api_key=Humanist1234" `
+  -var="elevenlabs_api_key=sk_cad87e933b57dc04947481f2361d26ab791baee922769f1a"

@@ -1,0 +1,35 @@
+# Copy to dev.tfvars and fill in values. Never commit dev.tfvars.
+
+aws_region                = "us-east-1"
+environment               = "dev"
+aurora_cluster_identifier = "creative-agent-dev-v1"
+
+# Aurora writer/instance endpoint (no password in this file when using -var flags)
+db_host            = "creative-agent-dev-v1-instance-1.c6nyuqq64h5z.us-east-1.rds.amazonaws.com"
+db_name            = "creative_agent"
+db_secret_username = "creative_admin_"
+# Pass sensitive values at apply time:
+#   terraform apply -var-file=environments/dev.tfvars `
+#     -var="db_secret_password=..." `
+#     -var="model_provider_api_key=..." `
+#     -var="api_key=..."
+
+deploy_lambdas                  = true
+enhancer_sqs_trigger_enabled    = true
+sqs_visibility_timeout_seconds  = 960
+
+enable_rds_proxy = false
+
+# TTS audio bucket (Phase 3) — force_destroy=true allows terraform destroy in dev
+tts_audio_bucket_force_destroy = true
+tts_audio_versioning_enabled     = false
+tts_debug_object_expiration_days = 90
+# tts_audio_kms_key_arn = ""  # optional SSE-KMS; leave empty for SSE-S3
+
+# Lambda networking (required for Aurora access)
+lambda_vpc_id = "vpc-03d4ff8a14eddd4d6"
+lambda_subnet_ids = [
+  "subnet-0211fe4ba0d9311ca",
+  "subnet-05e507473678b8645",
+]
+aurora_security_group_id = "sg-01ef636c27663ba1d"

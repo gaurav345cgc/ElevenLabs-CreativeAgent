@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenMyō — Script Hub</title>
+    <!-- GenMyō brand fonts (genmyo.ai) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDFAF5;
+            --bg-warm: #F2EBE3;
+            --surface-color: rgba(255, 255, 255, 0.72);
+            --surface-border: rgba(28, 26, 22, 0.1);
+            --primary-color: #784F38;
+            --primary-glow: rgba(120, 79, 56, 0.22);
+            --accent-gold: #C2A053;
+            --accent-terra: #B0703E;
+            --sage: #5C7060;
+            --success-color: #46563F;
+            --danger-color: #B33A3A;
+            --text-main: #1C1A16;
+            --text-muted: #6B645A;
+            --sidebar-width: 320px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(217, 226, 214, 0.55) 0, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(194, 160, 83, 0.14) 0, transparent 45%),
+                linear-gradient(180deg, #FDFAF5 0%, #F4F0E7 100%);
+        }
+
+        /* Header styling */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 1.5rem;
+            background: rgba(253, 250, 245, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--surface-border);
+            z-index: 10;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .logo-section h1 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.65rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .logo-section h1 span {
+            color: var(--accent-gold);
+        }
+
+        .logo-section p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 0.35rem;
+            padding: 0.2rem;
+            background: rgba(28, 26, 22, 0.04);
+            border-radius: 999px;
+            border: 1px solid var(--surface-border);
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.45rem 0.95rem;
+            border-radius: 999px;
+            transition: 0.2s;
+        }
+
+        .main-nav a:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .main-nav a.active {
+            color: #FDFAF5;
+            background: var(--primary-color);
+        }
+
+        .auth-controls {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .auth-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .auth-input-group label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .auth-input-group input {
+            background: #fff;
+            border: 1px solid var(--surface-border);
+            color: var(--text-main);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+            width: 200px;
+            transition: all 0.2s;
+        }
+
+        .auth-input-group input:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 2px rgba(194, 160, 83, 0.25);
+        }
+
+        /* Main layout split */
+        .app-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Sidebar transcripts list */
+        .sidebar {
+            width: var(--sidebar-width);
+            border-right: 1px solid var(--surface-border);
+            background: rgba(242, 235, 227, 0.55);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 1.2rem;
+            border-bottom: 1px solid var(--surface-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .status-select {
+            background: #fff;
+            border: 1px solid var(--surface-border);
+            color: var(--text-main);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .transcript-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .transcript-item {
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid var(--surface-border);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .transcript-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: transparent;
+            transition: background-color 0.2s;
+        }
+
+        .transcript-item:hover {
+            background: #fff;
+            border-color: rgba(194, 160, 83, 0.45);
+            transform: translateY(-2px);
+        }
+
+        .transcript-item.active {
+            background: rgba(194, 160, 83, 0.12);
+            border-color: var(--accent-gold);
+            box-shadow: 0 4px 20px rgba(120, 79, 56, 0.08);
+        }
+
+        .transcript-item.active::before {
+            background-color: var(--accent-gold);
+        }
+
+        .transcript-item h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .transcript-meta-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+        }
+
+        .status-badge.enhanced {
+            background: rgba(70, 86, 63, 0.12);
+            color: var(--success-color);
+        }
+
+        .status-badge.approved {
+            background: rgba(194, 160, 83, 0.18);
+            color: #8A6E2F;
+        }
+
+        .status-badge.review_required {
+            background: rgba(179, 58, 58, 0.12);
+            color: var(--danger-color);
+        }
+
+        /* Detail main workspace */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .workspace-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-muted);
+            gap: 1rem;
+        }
+
+        .workspace-empty svg {
+            width: 48px;
+            height: 48px;
+            stroke: var(--text-muted);
+            opacity: 0.4;
+        }
+
+        .workspace-header {
+            padding: 1.2rem 2rem;
+            border-bottom: 1px solid var(--surface-border);
+            background: rgba(255, 255, 255, 0.55);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .workspace-title h2 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+        }
+
+        .workspace-title p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        .workspace-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: #FDFAF5;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(120, 79, 56, 0.28);
+            filter: brightness(1.05);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: var(--surface-border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background: #fff;
+            border-color: rgba(194, 160, 83, 0.5);
+        }
+
+        .btn-danger {
+            background: rgba(179, 58, 58, 0.08);
+            border-color: rgba(179, 58, 58, 0.28);
+            color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background: rgba(179, 58, 58, 0.14);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Editor layout split */
+        .editor-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            padding: 1.5rem 2rem;
+            gap: 1.5rem;
+        }
+
+        .editor-panel {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(28, 26, 22, 0.08);
+        }
+
+        .panel-tabs {
+            display: flex;
+            background: rgba(242, 235, 227, 0.7);
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-gold);
+            box-shadow: none;
+        }
+
+        .tab-content {
+            flex: 1;
+            display: none;
+            overflow: hidden;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            resize: none;
+            color: var(--text-main);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            padding: 1.5rem;
+            outline: none;
+            overflow-y: auto;
+        }
+
+        .preview-pane {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            padding: 1.5rem;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            color: var(--text-muted);
+        }
+
+        /* Sidebar details */
+        .info-sidebar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            max-width: 360px;
+            overflow-y: auto;
+        }
+
+        .info-card {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 1.2rem;
+        }
+
+        .info-card h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            border-bottom: 1px solid var(--surface-border);
+            padding-bottom: 0.4rem;
+        }
+
+        .meta-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .meta-label {
+            color: var(--text-muted);
+        }
+
+        .meta-val {
+            font-weight: 500;
+        }
+
+        .bed-chosen {
+            border: 1px solid rgba(92, 112, 96, 0.35);
+            background: rgba(92, 112, 96, 0.08);
+            border-radius: 10px;
+            padding: 0.8rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .bed-chosen .bed-pill {
+            display: inline-block;
+            font-size: 0.68rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--sage);
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+
+        .bed-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .bed-reason {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            line-height: 1.4;
+            margin-bottom: 0.55rem;
+        }
+
+        .bed-player {
+            width: 100%;
+            height: 32px;
+        }
+
+        .bed-alt {
+            border-top: 1px solid var(--surface-border);
+            padding-top: 0.65rem;
+            margin-top: 0.65rem;
+        }
+
+        .bed-alt h4 {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            margin-bottom: 0.45rem;
+        }
+
+        .bed-option {
+            margin-bottom: 0.7rem;
+        }
+
+        .bed-option-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .bed-option button {
+            flex-shrink: 0;
+            font-size: 0.72rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--surface-border);
+            background: #fff;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .bed-option button:hover {
+            border-color: var(--primary-color);
+        }
+
+        .bed-empty {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: #1C1A16;
+            border: 1px solid var(--accent-gold);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(28, 26, 22, 0.2);
+            color: #FDFAF5;
+            transform: translateY(150%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            border-color: var(--sage);
+            box-shadow: 0 8px 32px rgba(70, 86, 63, 0.2);
+        }
+
+        .toast.error {
+            border-color: var(--danger-color);
+            box-shadow: 0 8px 32px rgba(179, 58, 58, 0.2);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-block">
+            <div class="logo-section">
+                <h1>GenMy<span>ō</span></h1>
+                <p>Creative Agent · Script Hub</p>
+            </div>
+            <nav class="main-nav" aria-label="Primary">
+                <a href="/dashboard" class="active">Script Hub</a>
+                <a href="/dashboard/library">Library</a>
+                <a href="/dashboard/production">Production</a>
+            </nav>
+        </div>
+        <div class="auth-controls">
+            <div class="auth-input-group">
+                <label for="tenantId">Tenant ID</label>
+                <input type="text" id="tenantId" value="" placeholder="UUID tenant id" autocomplete="off">
+            </div>
+            <div class="auth-input-group">
+                <label for="apiKey">API Key</label>
+                <input type="password" id="apiKey" value="" placeholder="API key" autocomplete="off">
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- Sidebar listing transcripts -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Scripts</h2>
+                <select id="statusFilter" class="status-select" onchange="loadTranscripts()">
+                    <option value="">All Statuses</option>
+                    <option value="ENHANCED" selected>Pending Review</option>
+                    <option value="APPROVED">Approved</option>
+                    <option value="REVIEW_REQUIRED">Review Required</option>
+                </select>
+            </div>
+            <div class="transcript-list" id="transcriptList">
+                <!-- Dynamically populated -->
+            </div>
+        </aside>
+
+        <!-- Main review workspace -->
+        <main class="workspace" id="workspace">
+            <div class="workspace-empty" id="workspaceEmpty">
+                <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
+                <p>Select a script from the sidebar to review and approve</p>
+            </div>
+
+            <!-- Workspace contents when transcript is active -->
+            <div id="workspaceContent" style="display: none; flex: 1; flex-direction: column; overflow: hidden;">
+                <div class="workspace-header">
+                    <div class="workspace-title">
+                        <h2 id="scriptTitle">Meditation Narrative</h2>
+                        <p id="scriptSub">ID: <span id="activeTranscriptId"></span></p>
+                    </div>
+                    <div class="workspace-actions">
+                        <button class="btn btn-secondary" onclick="retryEnhancement()" id="btnRetry">
+                            <span id="retryBtnText">Rerun Agent 2</span>
+                        </button>
+                        <button class="btn btn-primary" onclick="approveScript()" id="btnApprove">
+                            <span id="approveBtnText">Approve & Send to TTS</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="editor-container">
+                    <!-- Editor Main Panel -->
+                    <div class="editor-panel">
+                        <div class="panel-tabs">
+                            <button class="tab-btn active" onclick="switchTab('enhancedTab')" id="tabEnhanced">ElevenLabs Enhanced</button>
+                            <button class="tab-btn" onclick="switchTab('rawTab')" id="tabRaw">Raw Draft (Agent 1)</button>
+                        </div>
+                        
+                        <!-- Enhanced Editable Tab -->
+                        <div class="tab-content active" id="enhancedTab">
+                            <p id="pauseEditorHint" style="margin: 0 0 0.75rem; color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">
+                                Pause suggestions appear as <code>[pause 2s]</code> after each spoken sentence.
+                                Edit or remove them, then Approve — TTS follows your markers (skips re-planning when you keep any).
+                            </p>
+                            <textarea class="editor-textarea" id="enhancedTextarea" spellcheck="false" placeholder="Loading enhanced script content..."></textarea>
+                        </div>
+                        
+                        <!-- Raw Preview Tab -->
+                        <div class="tab-content" id="rawTab">
+                            <div class="preview-pane" id="rawPreviewPane">Loading raw draft...</div>
+                        </div>
+                    </div>
+
+                    <!-- Details/Metadata Sidebar -->
+                    <div class="info-sidebar">
+                        <div class="info-card">
+                            <h3>Script Taxonomy</h3>
+                            <div class="meta-grid">
+                                <div class="meta-item">
+                                    <span class="meta-label">Type</span>
+                                    <span class="meta-val" id="metaType">-</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Gen Code</span>
+                                    <span class="meta-val" id="metaGenCode">-</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Wound ID</span>
+                                    <span class="meta-val" id="metaWound">-</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Stage</span>
+                                    <span class="meta-val" id="metaStage">-</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Pillar</span>
+                                    <span class="meta-val" id="metaPillar">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <h3>Background music</h3>
+                            <div id="backgroundPanel">
+                                <p class="bed-empty">Select a script to see the catalog bed for this mix.</p>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <h3>Performance</h3>
+                            <div class="meta-grid">
+                                <div class="meta-item">
+                                    <span class="meta-label">Est. Duration</span>
+                                    <span class="meta-val" id="metaDuration">-</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Enhance Retries</span>
+                                    <span class="meta-val" id="metaAttempts">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification container -->
+    <div id="toast" class="toast">
+        <span id="toastMsg">Action completed successfully</span>
+    </div>
+
+    <script>
+        let currentTranscriptId = null;
+        let transcriptsCache = [];
+        let selectedBackgroundCode = null;
+
+        const MOCK_TENANT = '00000000-0000-0000-0000-000000000000';
+        const MOCK_API_KEY = 'dev-api-key';
+
+        function isUsableAuth() {
+            const tenant = (document.getElementById('tenantId').value || '').trim();
+            const key = (document.getElementById('apiKey').value || '').trim();
+            return Boolean(tenant) && Boolean(key)
+                && tenant !== MOCK_TENANT
+                && key !== MOCK_API_KEY;
+        }
+
+        function persistAuth() {
+            const tenant = (document.getElementById('tenantId').value || '').trim();
+            const key = (document.getElementById('apiKey').value || '').trim();
+            if (tenant && tenant !== MOCK_TENANT) localStorage.setItem('tenantId', tenant);
+            else localStorage.removeItem('tenantId');
+            if (key && key !== MOCK_API_KEY) localStorage.setItem('apiKey', key);
+            else localStorage.removeItem('apiKey');
+        }
+
+        document.getElementById('apiKey').addEventListener('change', () => {
+            persistAuth();
+            if (isUsableAuth()) loadTranscripts();
+        });
+        document.getElementById('tenantId').addEventListener('change', () => {
+            persistAuth();
+            if (isUsableAuth()) loadTranscripts();
+        });
+
+        const savedKey = localStorage.getItem('apiKey');
+        const savedTenant = localStorage.getItem('tenantId');
+        if (savedKey && savedKey !== MOCK_API_KEY) {
+            document.getElementById('apiKey').value = savedKey;
+        } else {
+            localStorage.removeItem('apiKey');
+        }
+        if (savedTenant && savedTenant !== MOCK_TENANT) {
+            document.getElementById('tenantId').value = savedTenant;
+        } else {
+            localStorage.removeItem('tenantId');
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.className = `toast show ${type}`;
+            document.getElementById('toastMsg').innerText = message;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function getHeaders() {
+            return {
+                'X-API-Key': document.getElementById('apiKey').value.trim(),
+                'X-Tenant-Id': document.getElementById('tenantId').value.trim(),
+                'Content-Type': 'application/json'
+            };
+        }
+
+        async function loadTranscripts() {
+            const listContainer = document.getElementById('transcriptList');
+            if (!isUsableAuth()) {
+                listContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">Enter Tenant ID and API Key to load real scripts.</div>';
+                return;
+            }
+
+            listContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading transcripts...</div>';
+            
+            const status = document.getElementById('statusFilter').value;
+            const url = `/transcripts${status ? `?status=${status}` : ''}`;
+            
+            try {
+                const response = await fetch(url, { headers: getHeaders() });
+                if (!response.ok) throw new Error(response.statusText);
+                const data = await response.json();
+                transcriptsCache = data;
+                
+                listContainer.innerHTML = '';
+                if (data.length === 0) {
+                    listContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">No transcripts found</div>';
+                    return;
+                }
+
+                data.forEach(tx => {
+                    const date = new Date(tx.created_at).toLocaleDateString();
+                    const item = document.createElement('div');
+                    item.className = `transcript-item ${currentTranscriptId === tx.transcript_id ? 'active' : ''}`;
+                    item.onclick = () => selectTranscript(tx.transcript_id);
+                    item.innerHTML = `
+                        <h3>${tx.title || 'Untitled Meditation'}</h3>
+                        <div class="transcript-meta-row">
+                            <span>${tx.generation_code}</span>
+                            <span class="status-badge ${tx.status.toLowerCase()}">${tx.status}</span>
+                        </div>
+                        <div class="transcript-meta-row" style="margin-top: 0.25rem;">
+                            <span>Stage ${tx.stage_no}</span>
+                            <span>${date}</span>
+                        </div>
+                    `;
+                    listContainer.appendChild(item);
+                });
+            } catch (err) {
+                console.error(err);
+                listContainer.innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--danger-color);">Error fetching: ${err.message}</div>`;
+            }
+        }
+
+        async function selectTranscript(transcriptId) {
+            currentTranscriptId = transcriptId;
+            
+            // Mark active item
+            document.querySelectorAll('.transcript-item').forEach(el => el.classList.remove('active'));
+            const items = document.getElementById('transcriptList').children;
+            for(let i=0; i<items.length; i++) {
+                if (transcriptsCache[i] && transcriptsCache[i].transcript_id === transcriptId) {
+                    items[i].classList.add('active');
+                }
+            }
+
+            // Show Workspace
+            document.getElementById('workspaceEmpty').style.display = 'none';
+            document.getElementById('workspaceContent').style.display = 'flex';
+            
+            const tx = transcriptsCache.find(t => t.transcript_id === transcriptId);
+            if (!tx) return;
+
+            document.getElementById('scriptTitle').innerText = tx.title || 'Untitled Script';
+            document.getElementById('activeTranscriptId').innerText = tx.transcript_id;
+            
+            // Populate taxonomy sidebar
+            document.getElementById('metaType').innerText = tx.content_type;
+            document.getElementById('metaGenCode').innerText = tx.generation_code;
+            document.getElementById('metaWound').innerText = tx.wound_id;
+            document.getElementById('metaStage').innerText = tx.stage_no;
+            document.getElementById('metaPillar').innerText = tx.pillar_code || 'None';
+            document.getElementById('metaDuration').innerText = tx.duration_estimate ? `${Math.round(tx.duration_estimate.seconds / 60)}m` : 'Unknown';
+            document.getElementById('metaAttempts').innerText = tx.enhancement_attempt_count;
+
+            // Load Versions content
+            document.getElementById('enhancedTextarea').value = 'Loading...';
+            document.getElementById('rawPreviewPane').innerText = 'Loading...';
+            document.getElementById('backgroundPanel').innerHTML = '<p class="bed-empty">Matching catalog music to this script...</p>';
+            
+            try {
+                const response = await fetch(`/transcripts/${transcriptId}/versions?include_content=true`, { headers: getHeaders() });
+                if (!response.ok) throw new Error(response.statusText);
+                const data = await response.json();
+                
+                const rawVer = data.versions.find(v => v.version_kind === 'RAW_PATTERN');
+                const enhancedVer = data.versions.find(v => v.version_kind === 'ELEVENLABS_ENHANCED');
+                const approvedVer = [...data.versions].reverse().find(v => v.version_kind === 'APPROVED_FINAL');
+                const reviewVer = approvedVer || enhancedVer;
+                
+                document.getElementById('enhancedTextarea').value = reviewVer
+                    ? (reviewVer.pause_review_text || reviewVer.content_text || '')
+                    : 'No enhanced version found.';
+                document.getElementById('rawPreviewPane').innerText = rawVer ? rawVer.content_text : 'No raw draft found.';
+
+                const holdCount = reviewVer?.metadata_json?.human_pause_hold_count
+                    ?? reviewVer?.metadata_json?.draft_pause_hold_count;
+                const holdSecs = reviewVer?.metadata_json?.human_pause_total_hold_seconds
+                    ?? reviewVer?.metadata_json?.draft_pause_total_hold_seconds;
+                const source = reviewVer?.metadata_json?.human_pause_hold_count != null
+                    ? 'your approved plan'
+                    : (reviewVer?.metadata_json?.draft_pause_source === 'audio_job'
+                        ? 'prior TTS job'
+                        : 'OpenAI draft');
+                if (typeof holdCount === 'number') {
+                    document.getElementById('pauseEditorHint').innerHTML =
+                        `Pause markers (${source}): <strong>${holdCount}</strong> holds / <strong>${holdSecs || 0}s</strong>. ` +
+                        `Edit e.g. <code>[pause 2s]</code>, then Approve to lock them for TTS.`;
+                }
+
+                renderBackgroundPanel(reviewVer?.metadata_json?.background_selection);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('enhancedTextarea').value = '';
+                document.getElementById('rawPreviewPane').innerText = 'Failed to load script content.';
+                document.getElementById('backgroundPanel').innerHTML =
+                    '<p class="bed-empty">Could not load background options.</p>';
+                showToast('Error loading version content: ' + err.message, 'error');
+            }
+
+            // Toggle Approve Button based on status
+            const isApproved = tx.status === 'APPROVED';
+            const btnApprove = document.getElementById('btnApprove');
+            btnApprove.disabled = isApproved;
+            document.getElementById('approveBtnText').innerText = isApproved ? 'Approved' : 'Approve & Send to TTS';
+        }
+
+        async function approveScript() {
+            if (!currentTranscriptId) return;
+            
+            const btn = document.getElementById('btnApprove');
+            const text = document.getElementById('enhancedTextarea').value;
+            
+            btn.disabled = true;
+            document.getElementById('approveBtnText').innerHTML = '<span class="spinner"></span> Approving...';
+            
+            try {
+                const response = await fetch(`/transcripts/${currentTranscriptId}/approve`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({
+                        approved_text: text,
+                        background_profile_code: selectedBackgroundCode || undefined,
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errPayload = await response.json();
+                    throw new Error(errPayload.detail?.message || response.statusText);
+                }
+
+                const body = await response.json();
+                if (body.tts_enqueue_error) {
+                    showToast(
+                        `Approved, but TTS queue failed: ${body.tts_enqueue_error}`,
+                        'error'
+                    );
+                } else if (body.audio_job_id) {
+                    showToast(
+                        `Approved — TTS queued (${body.audio_job_id.slice(0, 8)}…). Pauses + bed from this review will be used.`
+                    );
+                } else {
+                    showToast('Script approved.');
+                }
+                loadTranscripts();
+                
+                // Keep selected but update display
+                setTimeout(() => selectTranscript(currentTranscriptId), 500);
+            } catch (err) {
+                console.error(err);
+                showToast('Approval failed: ' + err.message, 'error');
+                btn.disabled = false;
+                document.getElementById('approveBtnText').innerText = 'Approve & Send to TTS';
+            }
+        }
+
+        async function retryEnhancement() {
+            if (!currentTranscriptId) return;
+            
+            const btn = document.getElementById('btnRetry');
+            btn.disabled = true;
+            document.getElementById('retryBtnText').innerHTML = '<span class="spinner"></span> Queueing revision...';
+            
+            try {
+                const response = await fetch(`/transcripts/${currentTranscriptId}/retry-enhancement`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({})
+                });
+                
+                if (!response.ok) {
+                    const errPayload = await response.json();
+                    throw new Error(errPayload.detail?.message || response.statusText);
+                }
+                
+                showToast('Agent 2 revision re-queued!');
+                loadTranscripts();
+                
+                // Close workspace
+                document.getElementById('workspaceEmpty').style.display = 'flex';
+                document.getElementById('workspaceContent').style.display = 'none';
+            } catch (err) {
+                console.error(err);
+                showToast('Failed to queue retry: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                document.getElementById('retryBtnText').innerText = 'Rerun Agent 2';
+            }
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function bedPlayer(url) {
+            if (!url) return '<p class="bed-empty">Preview unavailable</p>';
+            return `<audio class="bed-player" controls preload="none" src="${escapeHtml(url)}"></audio>`;
+        }
+
+        function renderBackgroundPanel(selection) {
+            const panel = document.getElementById('backgroundPanel');
+            selectedBackgroundCode = selection?.selected_code || null;
+            if (!selection || !selection.selected_code) {
+                panel.innerHTML = '<p class="bed-empty">No catalog pick yet. Retry opening this script if OpenAI was unavailable.</p>';
+                return;
+            }
+            const sourceLabel = selection.selected_by === 'reviewer'
+                ? 'Reviewer lock'
+                : (selection.selected_by === 'openai' ? 'OpenAI pick' : 'Catalog default');
+            const alts = (selection.alternatives || []).filter(a => a && a.code && a.code !== selection.selected_code);
+            const altHtml = alts.length
+                ? `<div class="bed-alt"><h4>Closest options</h4>${alts.map(alt => `
+                    <div class="bed-option">
+                        <div class="bed-option-row">
+                            <div>
+                                <div class="bed-name">${escapeHtml(alt.display_name || alt.code)}</div>
+                                <div class="bed-reason">${escapeHtml(alt.reason || '')}</div>
+                            </div>
+                            <button type="button" onclick="chooseBackground('${escapeHtml(alt.code)}')">Use this</button>
+                        </div>
+                        ${bedPlayer(alt.preview_url)}
+                    </div>`).join('')}</div>`
+                : '';
+            panel.innerHTML = `
+                <div class="bed-chosen">
+                    <span class="bed-pill">Will mix · ${escapeHtml(sourceLabel)}</span>
+                    <div class="bed-name">${escapeHtml(selection.selected_display_name || selection.selected_code)}</div>
+                    <div class="bed-reason">${escapeHtml(selection.reason || '')}</div>
+                    ${bedPlayer(selection.preview_url)}
+                </div>
+                ${altHtml}
+            `;
+        }
+
+        async function chooseBackground(profileCode) {
+            if (!currentTranscriptId || !profileCode) return;
+            const panel = document.getElementById('backgroundPanel');
+            panel.innerHTML = '<p class="bed-empty">Saving bed choice...</p>';
+            try {
+                const response = await fetch(`/transcripts/${currentTranscriptId}/background`, {
+                    method: 'PUT',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ profile_code: profileCode })
+                });
+                if (!response.ok) {
+                    const errPayload = await response.json().catch(() => ({}));
+                    throw new Error(errPayload.detail?.message || response.statusText);
+                }
+                const data = await response.json();
+                const approvedVer = [...data.versions].reverse().find(v => v.version_kind === 'APPROVED_FINAL');
+                const enhancedVer = data.versions.find(v => v.version_kind === 'ELEVENLABS_ENHANCED');
+                const reviewVer = approvedVer || enhancedVer;
+                renderBackgroundPanel(reviewVer?.metadata_json?.background_selection);
+                showToast('Background music updated for this script.');
+            } catch (err) {
+                console.error(err);
+                showToast('Could not update background: ' + err.message, 'error');
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            if (tabId === 'enhancedTab') document.getElementById('tabEnhanced').classList.add('active');
+            if (tabId === 'rawTab') document.getElementById('tabRaw').classList.add('active');
+        }
+
+        // Initialize loading
+        loadTranscripts();
+    </script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+{
+  "updated_at": null,
+  "wave": "first-10-thin-wound",
+  "targets": {
+    "videos": 10,
+    "minutes": 86,
+    "credits": 86000,
+    "credits_pool": 121000,
+    "assembly_low": 170,
+    "assembly_high": 330
+  },
+  "gate": {
+    "status": "pending",
+    "notes": ""
+  },
+  "assembly_spent_usd": 0,
+  "credits_used_total": 0,
+  "videos": [
+    {
+      "rank": 1,
+      "code": "WK-06",
+      "wound": "Age / Tech Obsolescence",
+      "generation": "Gen X · work",
+      "length_min": 10,
+      "words": "1,100–1,300",
+      "batch": "A",
+      "job": "Fill empty wound",
+      "existing": "0",
+      "credits_budget": 10000,
+      "credits_used": 0,
+      "steps": {
+        "brief": false,
+        "script": false,
+        "transcript": false,
+        "voice": false,
+        "mix": false,
+        "manifest": false,
+        "qa": false
+      }
+    },
+    {
+      "rank": 2,
+      "code": "BO-04",
+      "wound": "Disconnection from Body",
+      "generation": "Boomer · body",
+      "length_min": 6,
+      "words": "660–780",
+      "batch": "A",
+      "job": "First micro entry",
+      "existing": "1 (30 min)",
+      "credits_budget": 6000,
+      "credits_used": 0,
+      "steps": {
+        "brief": false,
+        "script": false,
+        "transcript": false,
+        "voice": false,
+        "mix": false,
+        "manifest": false,
+        "qa": false
+      }
+    },
+    {
+      "rank": 3,
+      "code": "GX-01",
+      "wound": "Invisible Sacrifice",
+      "generation": "Gen X · core",
+      "length_min": 5,
+      "words": "550–650",
+      "batch": "A",
+      "job": "First short for thinnest core",
+      "existing": "2 (both 20 min)",
+      "credits_budget": 5000,
+      "credits_used": 0,
+      "steps": {
+        "brief": false,
+        "script": false,
+        "transcript": false,
+        "voice": false,
+        "mix": false,
+        "manifest": false,
+        "qa": false
+      }
+    },
+    {
+      "rank": 4,
+      "code": "GZ-04",
+      "wound": "Validation Dependency",
+      "generation": "Gen Z · core",
+      "length_min": 3,
+      "words": "330–390",
+      "batch": "B",
+      "job": "Post-scroll micro reset",
+      "existing": "3 (10–25 min)",
+      "credits_budget": 3000,
+      "credits_used": 0,
+      "steps": {
+        "brief": false,
+        "script": false,
+        "transcript": false,
+        "voice": false,
+        "mix": false,
+        "manifest": false,
+        "qa": false
+      }
+    },
+    {
+      "rank": 5,
+      "code": "ML-03",
+      "wound": "Authentic Self Suppression",
+      "generation": "Millennial · core",
+      "length_min": 5,
+      "words": "550–650",
+      "batch": "B",
+      "job": "Thinnest ML short",
+      "existing": "3 (15–20 min)",
+      "credits_budget": 5000,
+      "credits_used": 0,
+      "steps": {
+        "brief": false,
+        "script": false,
+        "transcript": false,
+        "voice": false,
+        "mix": false,
+        "manifest": false,
+        "qa": false
+      }
+    },
+    {
+      "rank": 6,
+      "code": "PH-01",
+      "wound": "Chronic Pain",
+      "generation": "Boomer · physical",
+      "length_min": 15,
+      "words": "1,650–1,950",
+      "batch": "C",
+      "job": "Body gap, hard to license",
+      "existing": "Thin",
+      "credits_budget": 15000,
+      "credits_used": 0,
+      "steps": {
+        "brief": false,
+        "script": false,
+        "transcript": false,
+        "voice": false,
+        "mix": false,
+        "manifest": false,
+        "qa": false
+      }
+    },
+    {
+      "rank": 7,
+      "code": "WK-04",
+      "wound": "Organisational Betrayal",
+      "generation": "Gen X · work",
+      "length_min": 10,
+      "words": "1,100–1,300",
+      "batch": "C",
+      "job": "Work betrayal",
+      "existing": "Thin",
+      "credits_budget": 10000,
+      "credits_used": 0,
+      "steps": {
+        "brief": false,
+        "script": false,
+        "transcript": false,
+        "voice": false,
+        "mix": false,
+        "manifest": false,
+        "qa": false
+      }
+    },
+    {
+      "rank": 8,
+      "code": "WK-05",
+      "wound": "Purpose at Work",
+      "generation": "Gen X · work",
+      "length_min": 12,
+      "words": "1,320–1,560",
+      "batch": "C",
+      "job": "Abstract work theme",
+      "existing": "Thin",
+      "credits_budget": 12000,
+      "credits_used": 0,
+      "steps": {
+        "brief": false,
+        "script": false,
+        "transcript": false,
+        "voice": false,
+        "mix": false,
+        "manifest": false,
+        "qa": false
+      }
+    },
+    {
+      "rank": 9,
+      "code": "PH-03",
+      "wound": "Fatigue / Burnout",
+      "generation": "Boomer · physical",
+      "length_min": 12,
+      "words": "1,320–1,560",
+      "batch": "C",
+      "job": "Body fatigue",
+      "existing": "Thin",
+      "credits_budget": 12000,
+      "credits_used": 0,
+      "steps": {
+        "brief": false,
+        "script": false,
+        "transcript": false,
+        "voice": false,
+        "mix": false,
+        "manifest": false,
+        "qa": false
+      }
+    },
+    {
+      "rank": 10,
+      "code": "FR",
+      "wound": "Friendship overlays",
+      "generation": "Gen Z · friendship",
+      "length_min": 8,
+      "words": "880–1,040",
+      "batch": "D",
+      "job": "Loneliness / friendship loss",
+      "existing": "Sparse",
+      "credits_budget": 8000,
+      "credits_used": 0,
+      "steps": {
+        "brief": false,
+        "script": false,
+        "transcript": false,
+        "voice": false,
+        "mix": false,
+        "manifest": false,
+        "qa": false
+      }
+    }
+  ]
+}

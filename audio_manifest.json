@@ -1,0 +1,161 @@
+{
+  "audio_job_id": "8c13223c-cd6f-431b-8245-fcf572f0b201",
+  "chunk_count": 13,
+  "chunks": [
+    {
+      "byte_size": 486966,
+      "character_count": 418,
+      "checksum_sha256": "f266ef606dc6d86e329cb6fd31c191e77380f0492d40354f29363e50082c5d4f",
+      "chunk_id": "f583d1f5-37a7-4022-b6ec-941863533614",
+      "chunk_index": 0,
+      "duration_ms": 35000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/0.mp3",
+      "request_id": "NSYBTU0zuoQ0FhquDwrs",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 377879,
+      "character_count": 369,
+      "checksum_sha256": "c4f26cac4a283214f59219828ba3d1f3d670f4a16a1e9d75a7cfa5ad3f9f3ec8",
+      "chunk_id": "aa857710-0c52-47c1-895e-0e2a55ef8c8b",
+      "chunk_index": 1,
+      "duration_ms": 33000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/1.mp3",
+      "request_id": "oLupPLNkFQ8FNEhng36v",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 445588,
+      "character_count": 407,
+      "checksum_sha256": "945be9ccb8376321266fcfb5005044af3bf86a827094aff22a61637d00e4127b",
+      "chunk_id": "8cff490a-82d7-4e84-a711-b6cb110c8ec1",
+      "chunk_index": 2,
+      "duration_ms": 33000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/2.mp3",
+      "request_id": "AFEHEQdqCULnlvLLRook",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 483204,
+      "character_count": 406,
+      "checksum_sha256": "994ecfcc0a078dfa05596efa149d06b31e00472cbf6a5b4126cb7980221fe4d0",
+      "chunk_id": "4382977b-5360-419c-af95-ab7f831708dc",
+      "chunk_index": 3,
+      "duration_ms": 33000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/3.mp3",
+      "request_id": "Cak9jdb80mx53IKeTJMg",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 525000,
+      "character_count": 431,
+      "checksum_sha256": "5b75d4453c6ad16aac5033d6dbc2bb80f0be96d2a27510b398f451f0f731e646",
+      "chunk_id": "bd53c4eb-b726-42b5-945a-35c739aad235",
+      "chunk_index": 4,
+      "duration_ms": 34000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/4.mp3",
+      "request_id": "jsK0Gp4pm4lo3ITtdlAs",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 528762,
+      "character_count": 434,
+      "checksum_sha256": "526dc61858a54095ed5ab4d486f0aa55cf3e66e2dc84efa3c98c2fc0c8e77db9",
+      "chunk_id": "9ef14c97-01a7-4702-af2c-8f65a8d5c6b9",
+      "chunk_index": 5,
+      "duration_ms": 33000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/5.mp3",
+      "request_id": "N4NwJhB3pu0FthHnGEho",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 390417,
+      "character_count": 371,
+      "checksum_sha256": "6b2a5d07c19cd869c61ac4c9ba86f05cb28e6e8ac5077fa0fbd85a4a17dd40f0",
+      "chunk_id": "8e35d0c7-498c-41ff-a6e2-8ea5513e5c6d",
+      "chunk_index": 6,
+      "duration_ms": 30000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/6.mp3",
+      "request_id": "JrxHhySJLYA7KWv4aPPf",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 483204,
+      "character_count": 429,
+      "checksum_sha256": "529298d882eea3ef8b30475318c36a09529ac43de15fa6dbb6e3f0be8019eb7c",
+      "chunk_id": "5bc1a5a7-2827-4da7-b578-633d3c892176",
+      "chunk_index": 7,
+      "duration_ms": 33000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/7.mp3",
+      "request_id": "47e0muxkTdzKD5vuZidp",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 404628,
+      "character_count": 350,
+      "checksum_sha256": "d9a17bc8688df042c9391ef50c8c375c130bbcf2cdf1ccb9337b547878a9867c",
+      "chunk_id": "58d29356-ced4-4f71-a327-88dc4653e04f",
+      "chunk_index": 8,
+      "duration_ms": 28000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/8.mp3",
+      "request_id": "FHVa9LDG4794vyYp23CT",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 363668,
+      "character_count": 318,
+      "checksum_sha256": "aab2ae8109ea7d7b1c2e96406c295437a4f6c0ab63e64524c40e52663458f7f7",
+      "chunk_id": "cbff8cc8-939b-403c-b1c4-1966fe769137",
+      "chunk_index": 9,
+      "duration_ms": 25000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/9.mp3",
+      "request_id": "PJkMemoPcbtioSkdYhZR",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 404628,
+      "character_count": 361,
+      "checksum_sha256": "67da90521f6d599fbeb417d19ec68aec3f106a083e252b5ff2d13911ea1c0487",
+      "chunk_id": "96b24e6a-502f-4808-ac45-f4496c1969dd",
+      "chunk_index": 10,
+      "duration_ms": 27000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/10.mp3",
+      "request_id": "xRXAq1MkQfAkqPS7Smg6",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 515805,
+      "character_count": 441,
+      "checksum_sha256": "b6e168ece4f288e0161d76de8028289160e4ee99c98257edb6ccd97a1f7711b2",
+      "chunk_id": "38b25232-4750-4d89-899c-ccef5bd86503",
+      "chunk_index": 11,
+      "duration_ms": 34000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/11.mp3",
+      "request_id": "6zZ3HZqjvwPeJLquELCM",
+      "status": "COMPLETED"
+    },
+    {
+      "byte_size": 418003,
+      "character_count": 405,
+      "checksum_sha256": "bf0d5874cfc56a227a952ee50356d928686e6e195246dc27d4b3d705dffb929c",
+      "chunk_id": "ed8345eb-0097-4e4e-a96f-9adac2016f3a",
+      "chunk_index": 12,
+      "duration_ms": 34000,
+      "object_key": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/4b68b02a-b75e-4620-a6a6-b5e82f5d4d60/8c13223c-cd6f-431b-8245-fcf572f0b201/chunks/12.mp3",
+      "request_id": "GGtKletGEZARI8Xaa6XY",
+      "status": "COMPLETED"
+    }
+  ],
+  "correlation_id": null,
+  "generated_at": "2026-07-04T07:00:27.350470+00:00",
+  "model_id": "eleven_multilingual_v2",
+  "output_format": "mp3_44100_128",
+  "schema_version": "tts-audio-manifest-v1",
+  "status": "COMPLETED",
+  "tenant_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+  "total_duration_ms": 412000,
+  "transcript_id": "4b68b02a-b75e-4620-a6a6-b5e82f5d4d60",
+  "transcript_version_id": "449cd63e-81c4-4e12-b298-b1a04fc27fc7",
+  "voice_id": "Nyip1VgoS6bg9Vl30y8v",
+  "voice_profile_code": "drew_primary"
+}

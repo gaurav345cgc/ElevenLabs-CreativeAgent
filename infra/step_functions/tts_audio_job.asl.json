@@ -1,0 +1,248 @@
+{
+  "Comment": "TTS audio job lifecycle — Step Functions Standard (pause planning Phase 13)",
+  "StartAt": "ValidateInput",
+  "States": {
+    "ValidateInput": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_validate_input_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 30,
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 1,
+          "BackoffRate": 1.0
+        }
+      ],
+      "Next": "CreateAudioJob"
+    },
+    "CreateAudioJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_create_audio_job_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 60,
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Next": "LoadEnhancedTranscript"
+    },
+    "LoadEnhancedTranscript": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_load_transcript_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 60,
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Next": "PlanPauses"
+    },
+    "PlanPauses": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_plan_pauses_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 60,
+      "Retry": [
+        {
+          "ErrorEquals": ["PausePlannerTransientError", "States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["PausePlannerValidationError", "States.ALL"],
+          "Next": "FailureHandler"
+        }
+      ],
+      "Next": "PlanChunks"
+    },
+    "PlanChunks": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_plan_chunks_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 120,
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Next": "MapPausesToChunks"
+    },
+    "MapPausesToChunks": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_map_pauses_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 30,
+      "Retry": [
+        {
+          "ErrorEquals": ["PausePlannerTransientError", "States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["PausePlannerValidationError", "States.ALL"],
+          "Next": "FailureHandler"
+        }
+      ],
+      "Next": "PersistChunkPlan"
+    },
+    "PersistChunkPlan": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_persist_chunk_plan_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 60,
+      "Next": "GenerateChunksSequentially"
+    },
+    "GenerateChunksSequentially": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_generate_chunks_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 900,
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 5,
+          "MaxAttempts": 1,
+          "BackoffRate": 1.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "FailureHandler"
+        }
+      ],
+      "Next": "RegisterAssets"
+    },
+    "RegisterAssets": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_register_assets_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 60,
+      "Next": "FinalizeFinal"
+    },
+    "FinalizeFinal": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_finalize_final_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 120,
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "FailureHandler"
+        }
+      ],
+      "Next": "MixBackground"
+    },
+    "MixBackground": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_mix_background_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 180,
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "FailureHandler"
+        }
+      ],
+      "Next": "FinalizeManifest"
+    },
+    "FinalizeManifest": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_finalize_manifest_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 30,
+      "Next": "MarkCompleted"
+    },
+    "MarkCompleted": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_mark_completed_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 30,
+      "End": true
+    },
+    "FailureHandler": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${tts_failure_handler_lambda}",
+        "Payload.$": "$"
+      },
+      "TimeoutSeconds": 30,
+      "End": true
+    }
+  }
+}

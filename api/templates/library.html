@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenMyō — Listen Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDFAF5;
+            --surface-color: rgba(255, 255, 255, 0.78);
+            --surface-border: rgba(28, 26, 22, 0.1);
+            --primary-color: #784F38;
+            --accent-gold: #C2A053;
+            --accent-terra: #B0703E;
+            --sage: #5C7060;
+            --success-color: #46563F;
+            --text-main: #1C1A16;
+            --text-muted: #6B645A;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(217, 226, 214, 0.55) 0, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(194, 160, 83, 0.14) 0, transparent 45%),
+                linear-gradient(180deg, #FDFAF5 0%, #F4F0E7 100%);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 1.5rem;
+            background: rgba(253, 250, 245, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--surface-border);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-section h1 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.65rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-section h1 span { color: var(--accent-gold); }
+
+        .logo-section p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 0.35rem;
+            padding: 0.2rem;
+            background: rgba(28, 26, 22, 0.04);
+            border-radius: 999px;
+            border: 1px solid var(--surface-border);
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.45rem 0.95rem;
+            border-radius: 999px;
+            transition: 0.2s;
+        }
+
+        .main-nav a:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .main-nav a.active {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        .auth-controls {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .auth-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .auth-input-group label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+
+        .auth-input-group input {
+            border: 1px solid var(--surface-border);
+            background: #fff;
+            border-radius: 8px;
+            padding: 0.45rem 0.65rem;
+            font-size: 0.82rem;
+            min-width: 14rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+        }
+
+        .page-intro {
+            margin-bottom: 1.25rem;
+        }
+
+        .page-intro h2 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+
+        .page-intro p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 14px;
+        }
+
+        .filters label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            min-width: 9rem;
+            flex: 1;
+        }
+
+        .filters select, .filters input {
+            border: 1px solid var(--surface-border);
+            border-radius: 8px;
+            padding: 0.5rem 0.65rem;
+            font-size: 0.88rem;
+            background: #fff;
+            color: var(--text-main);
+            font-family: inherit;
+        }
+
+        .meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 0.55rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(28, 26, 22, 0.06);
+            color: var(--text-main);
+        }
+
+        .btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .pillar-section {
+            margin-bottom: 2rem;
+        }
+
+        .pillar-section h3 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.45rem;
+            font-weight: 600;
+            margin-bottom: 0.85rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .gen-block {
+            margin-bottom: 1.1rem;
+        }
+
+        .gen-block h4 {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--sage);
+            margin-bottom: 0.55rem;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.85rem;
+        }
+
+        .listen-card {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 14px;
+            padding: 1rem 1.05rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .listen-card h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .tag {
+            font-size: 0.72rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            background: rgba(92, 112, 96, 0.12);
+            color: var(--sage);
+        }
+
+        .card-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto;
+            flex-wrap: wrap;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 0.35rem;
+        }
+
+        .empty, .error {
+            padding: 2rem 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            background: var(--surface-color);
+            border: 1px dashed var(--surface-border);
+            border-radius: 14px;
+        }
+
+        .error { color: #8a3030; border-color: rgba(179, 58, 58, 0.25); }
+
+        .now-playing {
+            position: sticky;
+            bottom: 0;
+            margin-top: 1.5rem;
+            padding: 1rem 1.15rem;
+            background: rgba(253, 250, 245, 0.96);
+            border: 1px solid var(--surface-border);
+            border-radius: 14px 14px 0 0;
+            box-shadow: 0 -8px 24px rgba(28, 26, 22, 0.06);
+            display: none;
+        }
+
+        .now-playing.visible { display: block; }
+
+        .now-playing .label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .now-playing .title {
+            font-weight: 600;
+            margin-bottom: 0.65rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand-block">
+            <div class="logo-section">
+                <h1>GenMy<span>ō</span></h1>
+                <p>Creative Agent · Listen Library</p>
+            </div>
+            <nav class="main-nav" aria-label="Primary">
+                <a href="/dashboard">Script Hub</a>
+                <a href="/dashboard/library" class="active">Library</a>
+                <a href="/dashboard/production">Production</a>
+            </nav>
+        </div>
+        <div class="auth-controls">
+            <div class="auth-input-group">
+                <label for="tenantId">Tenant ID</label>
+                <input type="text" id="tenantId" value="" placeholder="UUID tenant id" autocomplete="off">
+            </div>
+            <div class="auth-input-group">
+                <label for="apiKey">API Key</label>
+                <input type="password" id="apiKey" value="" placeholder="API key" autocomplete="off">
+            </div>
+        </div>
+    </header>
+
+    <div class="page">
+        <div class="page-intro">
+            <h2>Listen Library</h2>
+            <p>Completed masters grouped by pillar, generation, and wound. Play in-browser without hunting through Script Hub.</p>
+        </div>
+
+        <div class="filters">
+            <label>Pillar
+                <select id="filterPillar" onchange="renderLibrary()">
+                    <option value="">All pillars</option>
+                </select>
+            </label>
+            <label>Generation
+                <select id="filterGeneration" onchange="renderLibrary()">
+                    <option value="">All generations</option>
+                </select>
+            </label>
+            <label>Wound
+                <select id="filterWound" onchange="renderLibrary()">
+                    <option value="">All wounds</option>
+                </select>
+            </label>
+            <label>Search
+                <input type="search" id="filterSearch" placeholder="Title or code…" oninput="renderLibrary()">
+            </label>
+        </div>
+
+        <div class="meta-bar">
+            <span id="resultCount">Enter tenant + API key to load</span>
+            <button class="btn btn-secondary" onclick="loadLibrary()" id="btnRefresh">Refresh</button>
+        </div>
+
+        <div id="libraryRoot">
+            <div class="empty">Sign in with tenant credentials to browse completed audio.</div>
+        </div>
+
+        <div class="now-playing" id="nowPlaying">
+            <div class="label">Now playing</div>
+            <div class="title" id="nowPlayingTitle">—</div>
+            <audio id="player" controls preload="none"></audio>
+        </div>
+    </div>
+
+    <script>
+        const MOCK_TENANT = '00000000-0000-0000-0000-000000000000';
+        const MOCK_API_KEY = 'dev-api-key';
+        let libraryItems = [];
+
+        function isUsableAuth() {
+            const tenant = (document.getElementById('tenantId').value || '').trim();
+            const key = (document.getElementById('apiKey').value || '').trim();
+            return Boolean(tenant) && Boolean(key)
+                && tenant !== MOCK_TENANT
+                && key !== MOCK_API_KEY;
+        }
+
+        function persistAuth() {
+            const tenant = (document.getElementById('tenantId').value || '').trim();
+            const key = (document.getElementById('apiKey').value || '').trim();
+            if (tenant && tenant !== MOCK_TENANT) localStorage.setItem('tenantId', tenant);
+            else localStorage.removeItem('tenantId');
+            if (key && key !== MOCK_API_KEY) localStorage.setItem('apiKey', key);
+            else localStorage.removeItem('apiKey');
+        }
+
+        function authHeaders() {
+            return {
+                'X-API-Key': document.getElementById('apiKey').value.trim(),
+                'X-Tenant-Id': document.getElementById('tenantId').value.trim(),
+            };
+        }
+
+        function restoreAuth() {
+            const savedKey = localStorage.getItem('apiKey');
+            const savedTenant = localStorage.getItem('tenantId');
+            if (savedKey && savedKey !== MOCK_API_KEY) document.getElementById('apiKey').value = savedKey;
+            if (savedTenant && savedTenant !== MOCK_TENANT) document.getElementById('tenantId').value = savedTenant;
+        }
+
+        function fillSelect(id, values, allLabel) {
+            const el = document.getElementById(id);
+            const current = el.value;
+            el.innerHTML = `<option value="">${allLabel}</option>`;
+            values.forEach(([value, label]) => {
+                const opt = document.createElement('option');
+                opt.value = value;
+                opt.textContent = label;
+                el.appendChild(opt);
+            });
+            if ([...el.options].some(o => o.value === current)) el.value = current;
+        }
+
+        function rebuildFilters(items) {
+            const pillars = new Map();
+            const gens = new Map();
+            const wounds = new Map();
+            items.forEach(item => {
+                if (item.pillar_code) pillars.set(item.pillar_code, item.pillar_label || item.pillar_code);
+                if (item.generation_code) gens.set(item.generation_code, item.generation_label || item.generation_code);
+                if (item.wound_id) wounds.set(item.wound_id, `${(item.wound_id || '').toUpperCase()} · ${item.wound_label || item.wound_id}`);
+            });
+            fillSelect('filterPillar', [...pillars.entries()].sort(), 'All pillars');
+            fillSelect('filterGeneration', [...gens.entries()].sort(), 'All generations');
+            fillSelect('filterWound', [...wounds.entries()].sort(), 'All wounds');
+        }
+
+        function filteredItems() {
+            const pillar = document.getElementById('filterPillar').value;
+            const gen = document.getElementById('filterGeneration').value;
+            const wound = document.getElementById('filterWound').value;
+            const q = (document.getElementById('filterSearch').value || '').trim().toLowerCase();
+            return libraryItems.filter(item => {
+                if (pillar && item.pillar_code !== pillar) return false;
+                if (gen && item.generation_code !== gen) return false;
+                if (wound && item.wound_id !== wound) return false;
+                if (q) {
+                    const hay = [
+                        item.title, item.wound_id, item.wound_label,
+                        item.generation_code, item.generation_label,
+                        item.pillar_code, item.pillar_label,
+                    ].join(' ').toLowerCase();
+                    if (!hay.includes(q)) return false;
+                }
+                return true;
+            });
+        }
+
+        function groupItems(items) {
+            const byPillar = new Map();
+            items.forEach(item => {
+                const pillarKey = item.pillar_code || 'unknown';
+                const pillarLabel = item.pillar_label || 'Unassigned pillar';
+                if (!byPillar.has(pillarKey)) byPillar.set(pillarKey, { label: pillarLabel, gens: new Map() });
+                const genKey = item.generation_code || 'unknown';
+                const genLabel = item.generation_label || 'Unassigned generation';
+                const pillar = byPillar.get(pillarKey);
+                if (!pillar.gens.has(genKey)) pillar.gens.set(genKey, { label: genLabel, items: [] });
+                pillar.gens.get(genKey).items.push(item);
+            });
+            return byPillar;
+        }
+
+        function escapeHtml(s) {
+            return String(s || '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;');
+        }
+
+        function formatHolds(item) {
+            if (item.pause_hold_count == null) return 'Holds n/a';
+            const secs = item.pause_total_hold_seconds != null ? ` · ${item.pause_total_hold_seconds}s silence` : '';
+            return `${item.pause_hold_count} holds${secs}`;
+        }
+
+        function renderLibrary() {
+            const root = document.getElementById('libraryRoot');
+            const items = filteredItems();
+            document.getElementById('resultCount').textContent =
+                `${items.length} of ${libraryItems.length} completed masters`;
+
+            if (!libraryItems.length) {
+                root.innerHTML = '<div class="empty">No completed audio jobs yet for this tenant.</div>';
+                return;
+            }
+            if (!items.length) {
+                root.innerHTML = '<div class="empty">No items match these filters.</div>';
+                return;
+            }
+
+            const grouped = groupItems(items);
+            let html = '';
+            for (const [, pillar] of grouped) {
+                html += `<section class="pillar-section"><h3>${escapeHtml(pillar.label)}</h3>`;
+                for (const [, gen] of pillar.gens) {
+                    html += `<div class="gen-block"><h4>${escapeHtml(gen.label)}</h4><div class="card-grid">`;
+                    gen.items.forEach(item => {
+                        const woundTag = item.wound_id
+                            ? `${String(item.wound_id).toUpperCase()} · ${item.wound_label || ''}`
+                            : 'Wound n/a';
+                        const safeTitle = escapeHtml(item.title || 'Untitled meditation');
+                        html += `
+                          <article class="listen-card">
+                            <h5>${safeTitle}</h5>
+                            <div class="tags">
+                              <span class="tag">${escapeHtml(woundTag)}</span>
+                              ${item.stage_no != null ? `<span class="tag">Stage ${item.stage_no}</span>` : ''}
+                            </div>
+                            <div class="card-meta">${escapeHtml(formatHolds(item))}<br>
+                              <span style="font-family:'Fira Code',monospace;font-size:0.7rem;">${escapeHtml(item.audio_job_id)}</span>
+                            </div>
+                            <div class="card-actions">
+                              <button class="btn btn-primary" data-job="${escapeHtml(item.audio_job_id)}" data-title="${safeTitle}" onclick="playItem(this.dataset.job, this.dataset.title)">Play master</button>
+                              <a class="btn btn-secondary" href="/dashboard" style="text-decoration:none;display:inline-flex;align-items:center;">Script Hub</a>
+                            </div>
+                          </article>`;
+                    });
+                    html += `</div></div>`;
+                }
+                html += `</section>`;
+            }
+            root.innerHTML = html;
+        }
+
+        async function playItem(audioJobId, title) {
+            const now = document.getElementById('nowPlaying');
+            const player = document.getElementById('player');
+            document.getElementById('nowPlayingTitle').textContent = title;
+            now.classList.add('visible');
+            player.removeAttribute('src');
+            try {
+                const res = await fetch(`/audio-jobs/${audioJobId}/manifest?include_urls=true`, {
+                    headers: authHeaders(),
+                });
+                if (!res.ok) throw new Error(`Manifest failed (${res.status})`);
+                const data = await res.json();
+                const url = data.master_url || data.final_url;
+                if (!url) throw new Error('No master_url on manifest');
+                player.src = url;
+                await player.play();
+            } catch (err) {
+                document.getElementById('nowPlayingTitle').textContent = `Could not play: ${err.message || err}`;
+            }
+        }
+
+        async function loadLibrary() {
+            const root = document.getElementById('libraryRoot');
+            if (!isUsableAuth()) {
+                root.innerHTML = '<div class="empty">Enter a real tenant ID and API key to load the library.</div>';
+                return;
+            }
+            persistAuth();
+            root.innerHTML = '<div class="empty">Loading completed masters…</div>';
+            try {
+                const res = await fetch('/library', { headers: authHeaders() });
+                if (!res.ok) {
+                    const detail = await res.text();
+                    throw new Error(detail || `HTTP ${res.status}`);
+                }
+                const data = await res.json();
+                libraryItems = data.items || [];
+                rebuildFilters(libraryItems);
+                renderLibrary();
+            } catch (err) {
+                root.innerHTML = `<div class="error">${escapeHtml(err.message || String(err))}</div>`;
+            }
+        }
+
+        document.getElementById('apiKey').addEventListener('change', () => {
+            persistAuth();
+            if (isUsableAuth()) loadLibrary();
+        });
+        document.getElementById('tenantId').addEventListener('change', () => {
+            persistAuth();
+            if (isUsableAuth()) loadLibrary();
+        });
+
+        restoreAuth();
+        if (isUsableAuth()) loadLibrary();
+    </script>
+</body>
+</html>

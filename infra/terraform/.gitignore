@@ -1,0 +1,15 @@
+# Terraform state and secrets — do not commit
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+# Real var files with passwords
+environments/*.tfvars
+!environments/*.tfvars.example
+build/
+**/deployed_api_key.txt

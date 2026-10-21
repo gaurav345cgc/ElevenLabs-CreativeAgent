@@ -1,0 +1,7 @@
+aws_region    = "us-east-1"
+environment   = "staging"
+enable_rds_proxy = false
+
+# Fill before apply — use separate Aurora/SQS from production
+# db_host = "..."
+# aurora_cluster_identifier = "creative-agent-staging-v1"

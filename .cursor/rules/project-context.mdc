@@ -1,0 +1,70 @@
+---
+description: Creative Agent architecture and invariants — consult before any implementation
+alwaysApply: true
+---
+
+# Creative Agent — Implementation Context
+
+**Before writing code, read:**
+
+1. [`guide/architecture-and-tts-plane.md`](../../guide/architecture-and-tts-plane.md) — **master spec** (current architecture + TTS plane boundaries)
+2. [`guide/AGENTS.md`](../../guide/AGENTS.md) — transcript agents, invariants, data model
+3. [`guide/DetailedBreakdown.md`](../../guide/DetailedBreakdown.md) — full transcript specification
+4. [`guide/transcript-enhancement-phase-map.md`](../../guide/transcript-enhancement-phase-map.md) — transcript build checklist (Phases 0–10 complete)
+5. [`guide/tts-plane-phase-map.md`](../../guide/tts-plane-phase-map.md) — **TTS plane build checklist** (next implementation)
+6. [`guide/phase-tts-0-boundary.md`](../../guide/phase-tts-0-boundary.md) — TTS Phase 0 boundary (complete)
+
+For Agent 2 enhancement behavior, also read [`guide/Agent2-guide.md`](../../guide/Agent2-guide.md).
+
+## Build phase
+
+- **Transcript plane:** complete (Phases 0–10). See [`guide/phase-10-api.md`](../../guide/phase-10-api.md).
+- **Next:** ElevenLabs TTS Orchestration Plane in `tts_pipeline/` — Phases 0–4 complete; follow [`guide/tts-plane-phase-map.md`](../../guide/tts-plane-phase-map.md) from **Phase 5 (voice policy)**.
+- Do **not** redesign `transcript_composer/`, `tts_enhancer/`, or the existing enhancement SQS flow.
+
+## System (transcript plane — stable)
+
+Two-agent, event-driven transcript pipeline for in-house meditation narration production.
+
+- **Agent 1** (`transcript_composer/`): Pattern Transcript Composer — base transcript from pattern index + examples
+- **Agent 2** (`tts_enhancer/`): ElevenLabs Script Doctor — TTS-optimized rewrite (`guide/Agent2-guide.md`)
+- **Flow**: Intake API → Lambda 1 → Aurora (`RAW_PATTERN`, `PENDING_ENHANCEMENT`) → SQS → Lambda 2 → Aurora (`ELEVENLABS_ENHANCED`, `ENHANCED`)
+- **Output (today):** Enhanced narration package for ElevenLabs — not audio
+
+## System (TTS plane — next)
+
+Downstream of `ENHANCED` transcripts. New code lives in `tts_pipeline/` only.
+
+- Read `ELEVENLABS_ENHANCED` → chunk plan → ElevenLabs Create speech → S3 audio → Aurora job/chunk metadata → manifest
+- Orchestration: Step Functions (recommended)
+- Never rewrite script meaning in the TTS plane
+
+## Invariants (never violate)
+
+1. Agent 2 reads from DB only — never in-memory unstored transcripts
+2. Never overwrite raw transcript — immutable versioned storage
+3. SQS for async handoff between Agent 1 and Agent 2 — not DB polling
+4. Separate Lambda handlers — never couple Agent 1 and Agent 2
+5. Transactional status changes before side effects
+6. Lambda 2 must be idempotent (SQS duplicates expected)
+7. Queue messages: identifiers only, no large text blobs
+8. Agent 2 preserves Agent 1's emotional register and therapeutic intent
+9. TTS plane: idempotent chunk generation; voice policy — not arbitrary caller-driven voice config
+
+## Code layout
+
+**Existing (stable):** `api/`, `transcript_composer/`, `tts_enhancer/`, `db/`, `queues/`, `models/`, `observability/`, `infra/`
+
+**New (TTS plane):** `tts_pipeline/` with `intake/`, `orchestrator/`, `chunk_planner/`, `generator/`, `finalizer/`, `voice_policy/`, `persistence/`
+
+## Data
+
+**Transcript tables:** `transcript`, `transcript_version`, `transcript_job_event`. Version kinds: `RAW_PATTERN`, `ELEVENLABS_ENHANCED`. Status: `PENDING_ENHANCEMENT` → `ENHANCING` → `ENHANCED`.
+
+**TTS tables (planned):** `transcript_audio_job`, `transcript_audio_chunk`, `transcript_audio_asset`, `transcript_audio_event` — see master spec §12.
+
+**TTS storage:** S3 bucket `creative-agent-{env}-tts-audio-{account_id}` for audio; keys in `tts_pipeline/persistence/s3_keys.py`. Env: `CREATIVE_AGENT_TTS_AUDIO_BUCKET`.
+
+## Out of scope (transcript plane)
+
+Audio generation, ElevenLabs API execution, video, subtitles, publishing — handled by TTS plane when built, not by changing Agent 1/2.

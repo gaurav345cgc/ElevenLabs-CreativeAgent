@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenMyō — First-10 Production Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDFAF5;
+            --surface-color: rgba(255, 255, 255, 0.78);
+            --surface-border: rgba(28, 26, 22, 0.1);
+            --primary-color: #784F38;
+            --accent-gold: #C2A053;
+            --accent-terra: #B0703E;
+            --sage: #5C7060;
+            --success-color: #46563F;
+            --warn-color: #B0703E;
+            --danger-color: #B33A3A;
+            --text-main: #1C1A16;
+            --text-muted: #6B645A;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(217, 226, 214, 0.55) 0, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(194, 160, 83, 0.14) 0, transparent 45%),
+                linear-gradient(180deg, #FDFAF5 0%, #F4F0E7 100%);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 1.5rem;
+            background: rgba(253, 250, 245, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--surface-border);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-section h1 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.65rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .logo-section h1 span { color: var(--accent-gold); }
+
+        .logo-section p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 0.35rem;
+            padding: 0.2rem;
+            background: rgba(28, 26, 22, 0.04);
+            border-radius: 999px;
+            border: 1px solid var(--surface-border);
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.45rem 0.95rem;
+            border-radius: 999px;
+            transition: 0.2s;
+        }
+
+        .main-nav a:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .main-nav a.active {
+            color: #FDFAF5;
+            background: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .btn {
+            text-decoration: none;
+            color: var(--text-main);
+            border: 1px solid var(--surface-border);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 0.5rem 0.95rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            border-color: rgba(194, 160, 83, 0.55);
+            background: #fff;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #FDFAF5;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.05);
+            background: var(--primary-color);
+            color: #FDFAF5;
+        }
+
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.5rem 1.5rem 3rem;
+        }
+
+        .hero { margin-bottom: 1.5rem; }
+
+        .hero h2 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.4rem;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            max-width: 46rem;
+            line-height: 1.55;
+            font-size: 0.95rem;
+        }
+
+        .meta-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .meta-row strong { color: var(--text-main); font-weight: 500; }
+
+        .scoreboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .scoreboard { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 1.1rem 1.2rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .card .label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            margin-bottom: 0.45rem;
+        }
+
+        .card .value {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.85rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .card .sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .bar {
+            height: 6px;
+            background: rgba(28, 26, 22, 0.08);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-top: 0.7rem;
+        }
+
+        .bar > span {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--sage));
+            border-radius: 99px;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 1.5rem 0 0.8rem;
+        }
+
+        .section-title h3 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .section-title span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .batches {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        @media (max-width: 900px) {
+            .batches { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .batch-card h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .batch-card .codes {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+            margin-bottom: 0.6rem;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            background: var(--surface-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.86rem;
+        }
+
+        th, td {
+            padding: 0.75rem 0.85rem;
+            text-align: left;
+            border-bottom: 1px solid var(--surface-border);
+            vertical-align: middle;
+        }
+
+        th {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            background: rgba(242, 235, 227, 0.85);
+            position: sticky;
+            top: 0;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(194, 160, 83, 0.06); }
+
+        .code {
+            font-family: 'Fira Code', monospace;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .status-pill.shipped {
+            background: rgba(70, 86, 63, 0.12);
+            color: var(--success-color);
+        }
+
+        .status-pill.in_progress {
+            background: rgba(176, 112, 62, 0.14);
+            color: var(--warn-color);
+        }
+
+        .status-pill.not_started {
+            background: rgba(28, 26, 22, 0.06);
+            color: var(--text-muted);
+        }
+
+        .steps {
+            display: flex;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            width: 1.55rem;
+            height: 1.55rem;
+            border-radius: 5px;
+            border: 1px solid var(--surface-border);
+            background: #fff;
+            color: var(--text-muted);
+            font-size: 0.62rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step.done {
+            background: rgba(70, 86, 63, 0.14);
+            border-color: var(--sage);
+            color: var(--success-color);
+        }
+
+        .step:hover { border-color: var(--accent-gold); }
+
+        .gate-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.2rem;
+        }
+
+        .gate-banner select {
+            background: #fff;
+            border: 1px solid var(--surface-border);
+            color: var(--text-main);
+            padding: 0.4rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 1.2rem;
+            right: 1.2rem;
+            background: #1C1A16;
+            border: 1px solid var(--accent-gold);
+            color: #FDFAF5;
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+            z-index: 50;
+        }
+
+        .toast.show { opacity: 1; }
+
+        .legend {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.6rem;
+        }
+
+        .legend code {
+            font-family: 'Fira Code', monospace;
+            color: var(--text-main);
+            background: rgba(28, 26, 22, 0.05);
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand-block">
+            <div class="logo-section">
+                <h1>GenMy<span>ō</span></h1>
+                <p>Creative Agent · Production</p>
+            </div>
+            <nav class="main-nav" aria-label="Primary">
+                <a href="/dashboard">Script Hub</a>
+                <a href="/dashboard/library">Library</a>
+                <a href="/dashboard/production" class="active">Production</a>
+            </nav>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-primary" id="saveBtn" type="button">Save progress</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Wave progress for leadership</h2>
+            <p>
+                Scope-locked first 10 videos — thinnest library gaps first.
+                Nothing else enters this wave until these ten are scripted, voiced, mixed, and shipped.
+            </p>
+            <div class="meta-row">
+                <span>Last updated: <strong id="updatedAt">—</strong></span>
+                <span>Ranking: empty → near-empty → weakest cores → overlays</span>
+            </div>
+        </section>
+
+        <section class="scoreboard" id="scoreboard">
+            <!-- filled by JS -->
+        </section>
+
+        <section class="card gate-banner">
+            <div>
+                <div class="label">Gate after Batch A+B (first 5)</div>
+                <div style="font-size:0.9rem;color:var(--text-muted);margin-top:0.25rem;">
+                    Stop if voice / mix / length feel wrong before spending remaining credits.
+                </div>
+            </div>
+            <select id="gateSelect">
+                <option value="pending">Pending</option>
+                <option value="pass">Pass — continue C+D</option>
+                <option value="fail">Fail — fix &amp; re-render micros</option>
+            </select>
+        </section>
+
+        <div class="section-title">
+            <h3>Batches</h3>
+            <span>Ship in order A → B → gate → C → D</span>
+        </div>
+        <section class="batches" id="batches"></section>
+
+        <div class="section-title">
+            <h3>All ten videos</h3>
+            <span>Click step chips to update · save to share with CEO</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Code</th>
+                        <th>Wound</th>
+                        <th>Batch</th>
+                        <th>Len</th>
+                        <th>Status</th>
+                        <th>Pipeline</th>
+                        <th>Credits</th>
+                    </tr>
+                </thead>
+                <tbody id="videoTable"></tbody>
+            </table>
+        </div>
+        <p class="legend">
+            Steps: <code>B</code> brief · <code>S</code> script · <code>T</code> transcript ·
+            <code>V</code> voice · <code>M</code> mix · <code>A</code> manifest · <code>Q</code> QA.
+            Shipped = all seven done.
+        </p>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const STEP_ORDER = ['brief', 'script', 'transcript', 'voice', 'mix', 'manifest', 'qa'];
+        const STEP_LABEL = { brief: 'B', script: 'S', transcript: 'T', voice: 'V', mix: 'M', manifest: 'A', qa: 'Q' };
+        let state = null;
+
+        function videoStatus(video) {
+            const done = STEP_ORDER.every((k) => video.steps[k]);
+            if (done) return 'shipped';
+            const any = STEP_ORDER.some((k) => video.steps[k]);
+            return any ? 'in_progress' : 'not_started';
+        }
+
+        function statusLabel(s) {
+            if (s === 'shipped') return 'Shipped';
+            if (s === 'in_progress') return 'In progress';
+            return 'Not started';
+        }
+
+        function pct(n, d) {
+            if (!d) return 0;
+            return Math.min(100, Math.round((n / d) * 100));
+        }
+
+        function showToast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2200);
+        }
+
+        function render() {
+            if (!state) return;
+            const videos = state.videos;
+            const shipped = videos.filter((v) => videoStatus(v) === 'shipped');
+            const minutesDone = shipped.reduce((s, v) => s + v.length_min, 0);
+            const creditsUsed = videos.reduce((s, v) => s + (v.credits_used || 0), 0)
+                || state.credits_used_total || 0;
+            const assembly = state.assembly_spent_usd || 0;
+            const t = state.targets;
+
+            document.getElementById('updatedAt').textContent = state.updated_at
+                ? new Date(state.updated_at).toLocaleString()
+                : 'Not saved yet';
+
+            document.getElementById('scoreboard').innerHTML = `
+                <div class="card">
+                    <div class="label">Videos shipped</div>
+                    <div class="value">${shipped.length}<span style="font-size:1rem;color:var(--text-muted)"> / ${t.videos}</span></div>
+                    <div class="sub">${pct(shipped.length, t.videos)}% of wave</div>
+                    <div class="bar"><span style="width:${pct(shipped.length, t.videos)}%"></span></div>
+                </div>
+                <div class="card">
+                    <div class="label">Practice minutes</div>
+                    <div class="value">${minutesDone}<span style="font-size:1rem;color:var(--text-muted)"> / ${t.minutes}</span></div>
+                    <div class="sub">Shipped content only</div>
+                    <div class="bar"><span style="width:${pct(minutesDone, t.minutes)}%"></span></div>
+                </div>
+                <div class="card">
+                    <div class="label">Voice credits</div>
+                    <div class="value">${creditsUsed.toLocaleString()}<span style="font-size:1rem;color:var(--text-muted)"> / ${t.credits.toLocaleString()}</span></div>
+                    <div class="sub">Pool ${t.credits_pool.toLocaleString()} / month</div>
+                    <div class="bar"><span style="width:${pct(creditsUsed, t.credits)}%"></span></div>
+                </div>
+                <div class="card">
+                    <div class="label">Assembly spend</div>
+                    <div class="value">$${assembly}<span style="font-size:1rem;color:var(--text-muted)"> / $${t.assembly_high}</span></div>
+                    <div class="sub">Budget band $${t.assembly_low}–$${t.assembly_high}</div>
+                    <div class="bar"><span style="width:${pct(assembly, t.assembly_high)}%"></span></div>
+                </div>
+            `;
+
+            document.getElementById('gateSelect').value = state.gate?.status || 'pending';
+
+            const batchMeta = {
+                A: { title: 'Batch A', desc: 'Empty / near-empty', codes: 'WK-06 · BO-04 · GX-01' },
+                B: { title: 'Batch B', desc: 'Weakest cores', codes: 'GZ-04 · ML-03' },
+                C: { title: 'Batch C', desc: 'Body + work depth', codes: 'PH-01 · WK-04 · WK-05 · PH-03' },
+                D: { title: 'Batch D', desc: 'Friendship overlay', codes: 'FR' },
+            };
+            document.getElementById('batches').innerHTML = Object.keys(batchMeta).map((b) => {
+                const list = videos.filter((v) => v.batch === b);
+                const done = list.filter((v) => videoStatus(v) === 'shipped').length;
+                const m = batchMeta[b];
+                return `
+                    <div class="card batch-card">
+                        <h4>${m.title}</h4>
+                        <div class="codes">${m.codes}</div>
+                        <div class="value" style="font-size:1.25rem">${done} / ${list.length}</div>
+                        <div class="sub">${m.desc}</div>
+                        <div class="bar"><span style="width:${pct(done, list.length)}%"></span></div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('videoTable').innerHTML = videos.map((v) => {
+                const st = videoStatus(v);
+                const steps = STEP_ORDER.map((k) => {
+                    const on = v.steps[k] ? 'done' : '';
+                    return `<button type="button" class="step ${on}" title="${k}" data-code="${v.code}" data-step="${k}">${STEP_LABEL[k]}</button>`;
+                }).join('');
+                return `
+                    <tr>
+                        <td>${v.rank}</td>
+                        <td class="code">${v.code}</td>
+                        <td>
+                            <div>${v.wound}</div>
+                            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.15rem">${v.generation} · ${v.job}</div>
+                        </td>
+                        <td>${v.batch}</td>
+                        <td>${v.length_min} min</td>
+                        <td><span class="status-pill ${st}">${statusLabel(st)}</span></td>
+                        <td><div class="steps">${steps}</div></td>
+                        <td style="font-variant-numeric:tabular-nums">${(v.credits_used || 0).toLocaleString()} / ${v.credits_budget.toLocaleString()}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.step').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const code = btn.dataset.code;
+                    const step = btn.dataset.step;
+                    const video = state.videos.find((x) => x.code === code);
+                    if (!video) return;
+                    video.steps[step] = !video.steps[step];
+                    render();
+                });
+            });
+        }
+
+        async function loadState() {
+            const res = await fetch('/dashboard/production/state');
+            if (!res.ok) throw new Error('Failed to load production state');
+            state = await res.json();
+            render();
+        }
+
+        async function saveState() {
+            state.updated_at = new Date().toISOString();
+            state.gate = state.gate || {};
+            state.gate.status = document.getElementById('gateSelect').value;
+            state.credits_used_total = state.videos.reduce((s, v) => s + (v.credits_used || 0), 0);
+            const res = await fetch('/dashboard/production/state', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(state),
+            });
+            if (!res.ok) {
+                showToast('Save failed');
+                return;
+            }
+            state = await res.json();
+            render();
+            showToast('Progress saved — CEO view updated');
+        }
+
+        document.getElementById('saveBtn').addEventListener('click', saveState);
+        document.getElementById('gateSelect').addEventListener('change', () => {
+            if (!state) return;
+            state.gate = state.gate || {};
+            state.gate.status = document.getElementById('gateSelect').value;
+        });
+
+        loadState().catch((err) => {
+            document.getElementById('scoreboard').innerHTML =
+                `<div class="card"><div class="label">Error</div><div class="sub">${err.message}</div></div>`;
+        });
+    </script>
+</body>
+</html>
