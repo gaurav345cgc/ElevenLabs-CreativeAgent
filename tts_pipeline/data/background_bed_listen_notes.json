@@ -1,0 +1,1047 @@
+{
+  "schema_version": "2.0",
+  "method": "objective_ffmpeg_volumedetect + strict gpt-audio-mini listen",
+  "listener_model": "gpt-audio-mini",
+  "clip_seconds": 25,
+  "clip_start_seconds": 20,
+  "catalog_mean_volume_db": -17.74,
+  "beds": {
+    "ambient_light": {
+      "code": "ambient_light",
+      "display_name": "Ambient light",
+      "source_filename": "AmbientLight.mp3",
+      "objective": {
+        "duration_s": 369.0,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -14.3,
+        "max_volume_db": -0.7,
+        "loudness_vs_catalog": "among louder third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft ambient hum",
+          "low-frequency drone"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "still",
+        "low_end": "moderate",
+        "would_distract_under_voice": "no",
+        "concrete_fingerprint": "steady low drone with subtle texture",
+        "best_fit_scripts": "background for narration or calm voiceover",
+        "avoid_scripts": "high-energy or fast-paced dialogue",
+        "one_line": "steady low drone with subtle texture and no rhythm",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "steady low drone with subtle texture and no rhythm",
+      "concrete_summary": "steady low drone with subtle texture and no rhythm (mean_loudness=-14.3dB; among louder third of catalog; loop≈369.0s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=still; fingerprint=steady low drone with subtle texture; under_voice_risk=no; listen_confidence=4/5)",
+      "best_for": "background for narration or calm voiceover",
+      "avoid_when": "high-energy or fast-paced dialogue",
+      "distinctive": "steady low drone with subtle texture"
+    },
+    "bilateral_eternal": {
+      "code": "bilateral_eternal",
+      "display_name": "Bilateral eternal",
+      "source_filename": "05-Bilateral-Eternal.mp3",
+      "objective": {
+        "duration_s": 520.4,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -17.4,
+        "max_volume_db": -1.5,
+        "loudness_vs_catalog": "mid loudness vs catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "low-frequency hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low drone with subtle shifts in volume",
+        "best_fit_scripts": "background for calm narration or slow-paced storytelling",
+        "avoid_scripts": "fast-paced or high-energy voiceovers",
+        "one_line": "soft sustained tones with a slow-moving low-frequency hum",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tones with a slow-moving low-frequency hum",
+      "concrete_summary": "soft sustained tones with a slow-moving low-frequency hum (mean_loudness=-17.4dB; mid loudness vs catalog; loop≈520.4s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a continuous low drone with subtle shifts in volume; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "background for calm narration or slow-paced storytelling",
+      "avoid_when": "fast-paced or high-energy voiceovers",
+      "distinctive": "a continuous low drone with subtle shifts in volume"
+    },
+    "bilateral_stillness": {
+      "code": "bilateral_stillness",
+      "display_name": "Bilateral stillness",
+      "source_filename": "04-Bilateral-Stillness.mp3",
+      "objective": {
+        "duration_s": 395.7,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -21.4,
+        "max_volume_db": -2.6,
+        "loudness_vs_catalog": "among quieter third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft ambient hum",
+          "low-frequency drone"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "low-frequency drone with subtle stereo shifts",
+        "best_fit_scripts": "short guided relaxation",
+        "avoid_scripts": "narration with frequent changes in tone",
+        "one_line": "soft ambient hum with slow stereo shifts and moderate low-end presence",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft ambient hum with slow stereo shifts and moderate low-end presence",
+      "concrete_summary": "soft ambient hum with slow stereo shifts and moderate low-end presence (mean_loudness=-21.4dB; among quieter third of catalog; loop≈395.7s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=low-frequency drone with subtle stereo shifts; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short guided relaxation",
+      "avoid_when": "narration with frequent changes in tone",
+      "distinctive": "low-frequency drone with subtle stereo shifts"
+    },
+    "bilateral_tranquility": {
+      "code": "bilateral_tranquility",
+      "display_name": "Bilateral tranquility",
+      "source_filename": "01-Bilateral-Tranquility-Variation-1.mp3",
+      "objective": {
+        "duration_s": 621.6,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -17.9,
+        "max_volume_db": -1.7,
+        "loudness_vs_catalog": "mid loudness vs catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft low-frequency hum",
+          "gentle high-frequency shimmer"
+        ],
+        "pulse_or_rhythm": "very_subtle",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a subtle shimmering texture in the high frequencies",
+        "best_fit_scripts": "short guided relaxation",
+        "avoid_scripts": "long-form narration with frequent changes in tone",
+        "one_line": "soft low-frequency hum with gentle shimmering texture and slow stereo movement",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft low-frequency hum with gentle shimmering texture and slow stereo movement",
+      "concrete_summary": "soft low-frequency hum with gentle shimmering texture and slow stereo movement (mean_loudness=-17.9dB; mid loudness vs catalog; loop≈621.6s; brightness=neutral; low_end=moderate; pulse_or_rhythm=very_subtle; stereo_motion=slow_movement; fingerprint=a subtle shimmering texture in the high frequencies; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short guided relaxation",
+      "avoid_when": "long-form narration with frequent changes in tone",
+      "distinctive": "a subtle shimmering texture in the high frequencies"
+    },
+    "blessing": {
+      "code": "blessing",
+      "display_name": "Blessing",
+      "source_filename": "09-BLESSING.mp3",
+      "objective": {
+        "duration_s": 613.5,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -19.3,
+        "max_volume_db": -2.1,
+        "loudness_vs_catalog": "among quieter third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "low hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low-frequency drone with subtle shifts in volume",
+        "best_fit_scripts": "calm narration with slow pacing",
+        "avoid_scripts": "fast-paced dialogue or energetic voiceovers",
+        "one_line": "soft sustained tones with a slow-moving low hum",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tones with a slow-moving low hum",
+      "concrete_summary": "soft sustained tones with a slow-moving low hum (mean_loudness=-19.3dB; among quieter third of catalog; loop≈613.5s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a continuous low-frequency drone with subtle shifts in volume; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "calm narration with slow pacing",
+      "avoid_when": "fast-paced dialogue or energetic voiceovers",
+      "distinctive": "a continuous low-frequency drone with subtle shifts in volume"
+    },
+    "blossom": {
+      "code": "blossom",
+      "display_name": "Blossom",
+      "source_filename": "14-BLOSSOM.mp3",
+      "objective": {
+        "duration_s": 403.7,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -18.1,
+        "max_volume_db": -1.1,
+        "loudness_vs_catalog": "mid loudness vs catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "low hum"
+        ],
+        "pulse_or_rhythm": "very_subtle",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low-frequency drone with gentle shifts",
+        "best_fit_scripts": "short guided intros, ambient background",
+        "avoid_scripts": "narration-heavy content, fast-paced dialogue",
+        "one_line": "soft sustained tones with a slow-moving low hum",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tones with a slow-moving low hum",
+      "concrete_summary": "soft sustained tones with a slow-moving low hum (mean_loudness=-18.1dB; mid loudness vs catalog; loop≈403.7s; brightness=neutral; low_end=moderate; pulse_or_rhythm=very_subtle; stereo_motion=slow_movement; fingerprint=a continuous low-frequency drone with gentle shifts; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short guided intros, ambient background",
+      "avoid_when": "narration-heavy content, fast-paced dialogue",
+      "distinctive": "a continuous low-frequency drone with gentle shifts"
+    },
+    "calm_ambient_01": {
+      "code": "calm_ambient_01",
+      "display_name": "Calm ambient — primary bed",
+      "source_filename": "calm_ambient_01.mp3",
+      "objective": {
+        "duration_s": 668.1,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -14.2,
+        "max_volume_db": -0.9,
+        "loudness_vs_catalog": "among louder third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "gentle high-frequency shimmer"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "gentle shimmering high-frequency tones",
+        "best_fit_scripts": "calm narration, soft spoken word",
+        "avoid_scripts": "loud or fast-paced dialogue",
+        "one_line": "soft sustained tones with gentle high-frequency shimmer and slow stereo movement",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tones with gentle high-frequency shimmer and slow stereo movement",
+      "concrete_summary": "soft sustained tones with gentle high-frequency shimmer and slow stereo movement (mean_loudness=-14.2dB; among louder third of catalog; loop≈668.1s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=gentle shimmering high-frequency tones; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "calm narration, soft spoken word",
+      "avoid_when": "loud or fast-paced dialogue",
+      "distinctive": "gentle shimmering high-frequency tones"
+    },
+    "calmness": {
+      "code": "calmness",
+      "display_name": "Calmness",
+      "source_filename": "Calmness.mp3",
+      "objective": {
+        "duration_s": 503.6,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -15.3,
+        "max_volume_db": -1.0,
+        "loudness_vs_catalog": "among louder third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "low-frequency hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "still",
+        "low_end": "moderate",
+        "would_distract_under_voice": "no",
+        "concrete_fingerprint": "soft sustained tones with a low-frequency hum",
+        "best_fit_scripts": "background for narration or voice-over",
+        "avoid_scripts": "when a strong rhythm or dynamic energy is needed",
+        "one_line": "Soft sustained tones with a low-frequency hum, no pulse, neutral brightness.",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "Soft sustained tones with a low-frequency hum, no pulse, neutral brightness.",
+      "concrete_summary": "Soft sustained tones with a low-frequency hum, no pulse, neutral brightness. (mean_loudness=-15.3dB; among louder third of catalog; loop≈503.6s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=still; fingerprint=soft sustained tones with a low-frequency hum; under_voice_risk=no; listen_confidence=4/5)",
+      "best_for": "background for narration or voice-over",
+      "avoid_when": "when a strong rhythm or dynamic energy is needed",
+      "distinctive": "soft sustained tones with a low-frequency hum"
+    },
+    "deeper_meaning": {
+      "code": "deeper_meaning",
+      "display_name": "Deeper meaning",
+      "source_filename": "DeeperMeaning.mp3",
+      "objective": {
+        "duration_s": 429.8,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -17.5,
+        "max_volume_db": -1.1,
+        "loudness_vs_catalog": "mid loudness vs catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft ambient drone",
+          "low hum"
+        ],
+        "pulse_or_rhythm": "very_subtle",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low-frequency hum with a gentle rising and falling pattern",
+        "best_fit_scripts": "short narration with calm tone",
+        "avoid_scripts": "long speeches or dynamic voiceovers",
+        "one_line": "soft ambient drone with a subtle low-frequency hum and slow stereo movement",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft ambient drone with a subtle low-frequency hum and slow stereo movement",
+      "concrete_summary": "soft ambient drone with a subtle low-frequency hum and slow stereo movement (mean_loudness=-17.5dB; mid loudness vs catalog; loop≈429.8s; brightness=neutral; low_end=moderate; pulse_or_rhythm=very_subtle; stereo_motion=slow_movement; fingerprint=a continuous low-frequency hum with a gentle rising and falling pattern; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short narration with calm tone",
+      "avoid_when": "long speeches or dynamic voiceovers",
+      "distinctive": "a continuous low-frequency hum with a gentle rising and falling pattern"
+    },
+    "earth": {
+      "code": "earth",
+      "display_name": "Earth",
+      "source_filename": "19-EARTH.mp3",
+      "objective": {
+        "duration_s": 613.5,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -18.1,
+        "max_volume_db": -1.8,
+        "loudness_vs_catalog": "mid loudness vs catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "low drone",
+          "soft hum"
+        ],
+        "pulse_or_rhythm": "very_subtle",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low-frequency drone with a gentle oscillation",
+        "best_fit_scripts": "calm narration, slow-paced descriptions",
+        "avoid_scripts": "fast-paced dialogue, energetic voiceovers",
+        "one_line": "A continuous low-frequency drone with slow oscillation and moderate low-end presence.",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "A continuous low-frequency drone with slow oscillation and moderate low-end presence.",
+      "concrete_summary": "A continuous low-frequency drone with slow oscillation and moderate low-end presence. (mean_loudness=-18.1dB; mid loudness vs catalog; loop≈613.5s; brightness=neutral; low_end=moderate; pulse_or_rhythm=very_subtle; stereo_motion=slow_movement; fingerprint=a continuous low-frequency drone with a gentle oscillation; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "calm narration, slow-paced descriptions",
+      "avoid_when": "fast-paced dialogue, energetic voiceovers",
+      "distinctive": "a continuous low-frequency drone with a gentle oscillation"
+    },
+    "evolving_pads": {
+      "code": "evolving_pads",
+      "display_name": "Evolving pads",
+      "source_filename": "Evolving-Pads-Free-Relaxing-Royalty-Free-Music-by-Liborio-Conti-01-Evolving-Pads.mp3",
+      "objective": {
+        "duration_s": 435.4,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -16.2,
+        "max_volume_db": -1.4,
+        "loudness_vs_catalog": "among louder third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained pad",
+          "gentle harmonic overtones"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "no",
+        "concrete_fingerprint": "soft, evolving harmonic texture",
+        "best_fit_scripts": "background for ambient narration",
+        "avoid_scripts": "loud or fast-paced voiceovers",
+        "one_line": "Soft, evolving pad with gentle harmonic overtones and slow stereo movement.",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "Soft, evolving pad with gentle harmonic overtones and slow stereo movement.",
+      "concrete_summary": "Soft, evolving pad with gentle harmonic overtones and slow stereo movement. (mean_loudness=-16.2dB; among louder third of catalog; loop≈435.4s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=soft, evolving harmonic texture; under_voice_risk=no; listen_confidence=4/5)",
+      "best_for": "background for ambient narration",
+      "avoid_when": "loud or fast-paced voiceovers",
+      "distinctive": "soft, evolving harmonic texture"
+    },
+    "floating": {
+      "code": "floating",
+      "display_name": "Floating",
+      "source_filename": "24-FLOATING.mp3",
+      "objective": {
+        "duration_s": 735.4,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -19.5,
+        "max_volume_db": -2.2,
+        "loudness_vs_catalog": "among quieter third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "low-frequency hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low hum with subtle tonal shifts",
+        "best_fit_scripts": "short guided intros, ambient background",
+        "avoid_scripts": "long spoken narratives, detailed voiceovers",
+        "one_line": "soft sustained tones with a slow-moving low-frequency hum",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tones with a slow-moving low-frequency hum",
+      "concrete_summary": "soft sustained tones with a slow-moving low-frequency hum (mean_loudness=-19.5dB; among quieter third of catalog; loop≈735.4s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a continuous low hum with subtle tonal shifts; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short guided intros, ambient background",
+      "avoid_when": "long spoken narratives, detailed voiceovers",
+      "distinctive": "a continuous low hum with subtle tonal shifts"
+    },
+    "forever": {
+      "code": "forever",
+      "display_name": "Forever",
+      "source_filename": "Forever.mp3",
+      "objective": {
+        "duration_s": 1160.1,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -17.2,
+        "max_volume_db": -1.1,
+        "loudness_vs_catalog": "mid loudness vs catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "low-frequency hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low hum with subtle tonal shifts",
+        "best_fit_scripts": "short announcements or brief spoken intros",
+        "avoid_scripts": "long-form narration or detailed dialogue",
+        "one_line": "soft sustained tones with a slow-moving low-frequency hum",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tones with a slow-moving low-frequency hum",
+      "concrete_summary": "soft sustained tones with a slow-moving low-frequency hum (mean_loudness=-17.2dB; mid loudness vs catalog; loop≈1160.1s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a continuous low hum with subtle tonal shifts; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short announcements or brief spoken intros",
+      "avoid_when": "long-form narration or detailed dialogue",
+      "distinctive": "a continuous low hum with subtle tonal shifts"
+    },
+    "forgotten_place": {
+      "code": "forgotten_place",
+      "display_name": "Forgotten place",
+      "source_filename": "ForgottonPlace.mp3",
+      "objective": {
+        "duration_s": 705.7,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -17.3,
+        "max_volume_db": -2.2,
+        "loudness_vs_catalog": "mid loudness vs catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft ambient drone",
+          "low hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "dark",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low-frequency drone with subtle shifts",
+        "best_fit_scripts": "short descriptive narration",
+        "avoid_scripts": "long-form dialogue or detailed voiceover",
+        "one_line": "soft ambient drone with slow movement and moderate low-end presence",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft ambient drone with slow movement and moderate low-end presence",
+      "concrete_summary": "soft ambient drone with slow movement and moderate low-end presence (mean_loudness=-17.3dB; mid loudness vs catalog; loop≈705.7s; brightness=dark; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a continuous low-frequency drone with subtle shifts; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short descriptive narration",
+      "avoid_when": "long-form dialogue or detailed voiceover",
+      "distinctive": "a continuous low-frequency drone with subtle shifts"
+    },
+    "frozen_in_time": {
+      "code": "frozen_in_time",
+      "display_name": "Frozen in time",
+      "source_filename": "Frozen-in-Time.mp3",
+      "objective": {
+        "duration_s": 572.5,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -15.7,
+        "max_volume_db": -1.0,
+        "loudness_vs_catalog": "among louder third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "low drone",
+          "soft high-frequency shimmer"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "soft high-frequency shimmer",
+        "best_fit_scripts": "short narration with calm tone",
+        "avoid_scripts": "fast-paced or energetic voiceovers",
+        "one_line": "Soft low drone with a slow shimmering texture in the high frequencies.",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "Soft low drone with a slow shimmering texture in the high frequencies.",
+      "concrete_summary": "Soft low drone with a slow shimmering texture in the high frequencies. (mean_loudness=-15.7dB; among louder third of catalog; loop≈572.5s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=soft high-frequency shimmer; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short narration with calm tone",
+      "avoid_when": "fast-paced or energetic voiceovers",
+      "distinctive": "soft high-frequency shimmer"
+    },
+    "just_relax": {
+      "code": "just_relax",
+      "display_name": "Just relax",
+      "source_filename": "Just-Relax-No-Copyright-Music-01-Just-Relax.mp3",
+      "objective": {
+        "duration_s": 309.8,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -17.5,
+        "max_volume_db": -1.9,
+        "loudness_vs_catalog": "mid loudness vs catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft ambient synth pad",
+          "low-frequency hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a sustained, low drone with subtle shifts in tone",
+        "best_fit_scripts": "short guided breathing exercise",
+        "avoid_scripts": "long-form narration or detailed dialogue",
+        "one_line": "soft ambient synth pad with a low-frequency hum and slow stereo shifts",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft ambient synth pad with a low-frequency hum and slow stereo shifts",
+      "concrete_summary": "soft ambient synth pad with a low-frequency hum and slow stereo shifts (mean_loudness=-17.5dB; mid loudness vs catalog; loop≈309.8s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a sustained, low drone with subtle shifts in tone; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short guided breathing exercise",
+      "avoid_when": "long-form narration or detailed dialogue",
+      "distinctive": "a sustained, low drone with subtle shifts in tone"
+    },
+    "light_and_balanced": {
+      "code": "light_and_balanced",
+      "display_name": "Light and balanced",
+      "source_filename": "Light-And-Balanced-No-Copyright-Music-01-Light-And-Balanced.mp3",
+      "objective": {
+        "duration_s": 259.0,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -15.5,
+        "max_volume_db": -1.5,
+        "loudness_vs_catalog": "among louder third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft synth pad",
+          "gentle high-frequency shimmer"
+        ],
+        "pulse_or_rhythm": "very_subtle",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "soft shimmering high-frequency texture",
+        "best_fit_scripts": "short narration with calm tone",
+        "avoid_scripts": "long-form voiceover with strong emphasis",
+        "one_line": "Soft synth pad with gentle shimmering texture and slow stereo movement.",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "Soft synth pad with gentle shimmering texture and slow stereo movement.",
+      "concrete_summary": "Soft synth pad with gentle shimmering texture and slow stereo movement. (mean_loudness=-15.5dB; among louder third of catalog; loop≈259.0s; brightness=neutral; low_end=moderate; pulse_or_rhythm=very_subtle; stereo_motion=slow_movement; fingerprint=soft shimmering high-frequency texture; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short narration with calm tone",
+      "avoid_when": "long-form voiceover with strong emphasis",
+      "distinctive": "soft shimmering high-frequency texture"
+    },
+    "peaceful_sleep": {
+      "code": "peaceful_sleep",
+      "display_name": "Peaceful sleep",
+      "source_filename": "Peaceful-Sleep-Music-Free-Royalty-Free-Music-by-Liborio-Conti-01-Peaceful-Sleep-Music.mp3",
+      "objective": {
+        "duration_s": 417.6,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -16.9,
+        "max_volume_db": -1.2,
+        "loudness_vs_catalog": "mid loudness vs catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft ambient drone",
+          "low-frequency hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "dark",
+        "stereo_motion": "still",
+        "low_end": "moderate",
+        "would_distract_under_voice": "no",
+        "concrete_fingerprint": "steady low drone with subtle texture",
+        "best_fit_scripts": "calm narration, gentle voiceovers",
+        "avoid_scripts": "lively or rhythmic speech",
+        "one_line": "steady low drone with subtle texture and no pulse",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "steady low drone with subtle texture and no pulse",
+      "concrete_summary": "steady low drone with subtle texture and no pulse (mean_loudness=-16.9dB; mid loudness vs catalog; loop≈417.6s; brightness=dark; low_end=moderate; pulse_or_rhythm=none; stereo_motion=still; fingerprint=steady low drone with subtle texture; under_voice_risk=no; listen_confidence=4/5)",
+      "best_for": "calm narration, gentle voiceovers",
+      "avoid_when": "lively or rhythmic speech",
+      "distinctive": "steady low drone with subtle texture"
+    },
+    "pure_ambient": {
+      "code": "pure_ambient",
+      "display_name": "Pure ambient",
+      "source_filename": "Pure-Ambient-No-Copyright-Music-01-Pure-Ambient.mp3",
+      "objective": {
+        "duration_s": 295.5,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -16.1,
+        "max_volume_db": -1.7,
+        "loudness_vs_catalog": "among louder third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "low-frequency hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low hum with subtle tonal shifts",
+        "best_fit_scripts": "short voice-over with calm narration",
+        "avoid_scripts": "long-form dialogue or fast-paced speech",
+        "one_line": "soft sustained tones with a slow-moving low-frequency hum",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tones with a slow-moving low-frequency hum",
+      "concrete_summary": "soft sustained tones with a slow-moving low-frequency hum (mean_loudness=-16.1dB; among louder third of catalog; loop≈295.5s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a continuous low hum with subtle tonal shifts; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short voice-over with calm narration",
+      "avoid_when": "long-form dialogue or fast-paced speech",
+      "distinctive": "a continuous low hum with subtle tonal shifts"
+    },
+    "reflections": {
+      "code": "reflections",
+      "display_name": "Reflections",
+      "source_filename": "Reflections-No-Copyright-Music-01-Reflections.mp3",
+      "objective": {
+        "duration_s": 276.4,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -14.9,
+        "max_volume_db": -1.1,
+        "loudness_vs_catalog": "among louder third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft ambient pad",
+          "low hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a gentle, continuous low hum with subtle shifts in tone",
+        "best_fit_scripts": "short guided intros, calm narration",
+        "avoid_scripts": "fast-paced voiceovers, detailed technical explanations",
+        "one_line": "soft ambient pad with a low hum and slow stereo shifts",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft ambient pad with a low hum and slow stereo shifts",
+      "concrete_summary": "soft ambient pad with a low hum and slow stereo shifts (mean_loudness=-14.9dB; among louder third of catalog; loop≈276.4s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a gentle, continuous low hum with subtle shifts in tone; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short guided intros, calm narration",
+      "avoid_when": "fast-paced voiceovers, detailed technical explanations",
+      "distinctive": "a gentle, continuous low hum with subtle shifts in tone"
+    },
+    "replenish": {
+      "code": "replenish",
+      "display_name": "Replenish",
+      "source_filename": "39-REPLENISH.mp3",
+      "objective": {
+        "duration_s": 601.6,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -24.5,
+        "max_volume_db": -6.7,
+        "loudness_vs_catalog": "among quieter third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "low hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "soft sustained tones with a low hum in the background",
+        "best_fit_scripts": "calm narration, slow-paced descriptions",
+        "avoid_scripts": "fast-paced dialogue, energetic voiceovers",
+        "one_line": "soft sustained tones with a low hum and slow stereo movement",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tones with a low hum and slow stereo movement",
+      "concrete_summary": "soft sustained tones with a low hum and slow stereo movement (mean_loudness=-24.5dB; among quieter third of catalog; loop≈601.6s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=soft sustained tones with a low hum in the background; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "calm narration, slow-paced descriptions",
+      "avoid_when": "fast-paced dialogue, energetic voiceovers",
+      "distinctive": "soft sustained tones with a low hum in the background"
+    },
+    "sanctuary": {
+      "code": "sanctuary",
+      "display_name": "Sanctuary",
+      "source_filename": "44-SANCTUARY.mp3",
+      "objective": {
+        "duration_s": 663.5,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -20.5,
+        "max_volume_db": -1.2,
+        "loudness_vs_catalog": "among quieter third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "low hum"
+        ],
+        "pulse_or_rhythm": "very_subtle",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low-frequency hum with gentle tonal shifts",
+        "best_fit_scripts": "short guided intros, ambient background",
+        "avoid_scripts": "long spoken narratives, detailed voiceovers",
+        "one_line": "soft sustained tones with a slow-moving low hum",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tones with a slow-moving low hum",
+      "concrete_summary": "soft sustained tones with a slow-moving low hum (mean_loudness=-20.5dB; among quieter third of catalog; loop≈663.5s; brightness=neutral; low_end=moderate; pulse_or_rhythm=very_subtle; stereo_motion=slow_movement; fingerprint=a continuous low-frequency hum with gentle tonal shifts; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short guided intros, ambient background",
+      "avoid_when": "long spoken narratives, detailed voiceovers",
+      "distinctive": "a continuous low-frequency hum with gentle tonal shifts"
+    },
+    "the_deep": {
+      "code": "the_deep",
+      "display_name": "The Deep",
+      "source_filename": "49-THE-DEEP.mp3",
+      "objective": {
+        "duration_s": 1001.2,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -19.8,
+        "max_volume_db": -2.2,
+        "loudness_vs_catalog": "among quieter third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "low drone",
+          "soft ambient hum"
+        ],
+        "pulse_or_rhythm": "very_subtle",
+        "brightness": "dark",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low drone with a subtle shifting tone",
+        "best_fit_scripts": "background for calm narration or slow-paced storytelling",
+        "avoid_scripts": "fast-paced dialogue or energetic voiceovers",
+        "one_line": "A continuous low drone with subtle shifting tones and slow stereo movement.",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "A continuous low drone with subtle shifting tones and slow stereo movement.",
+      "concrete_summary": "A continuous low drone with subtle shifting tones and slow stereo movement. (mean_loudness=-19.8dB; among quieter third of catalog; loop≈1001.2s; brightness=dark; low_end=moderate; pulse_or_rhythm=very_subtle; stereo_motion=slow_movement; fingerprint=a continuous low drone with a subtle shifting tone; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "background for calm narration or slow-paced storytelling",
+      "avoid_when": "fast-paced dialogue or energetic voiceovers",
+      "distinctive": "a continuous low drone with a subtle shifting tone"
+    },
+    "timing": {
+      "code": "timing",
+      "display_name": "Timing",
+      "source_filename": "54-TIMING.mp3",
+      "objective": {
+        "duration_s": 403.7,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -18.1,
+        "max_volume_db": -1.8,
+        "loudness_vs_catalog": "mid loudness vs catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tone",
+          "low-frequency hum"
+        ],
+        "pulse_or_rhythm": "very_subtle",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "soft, continuous drone with a slight low-frequency undertone",
+        "best_fit_scripts": "short guided intros, ambient background",
+        "avoid_scripts": "when clear, steady narration is needed",
+        "one_line": "soft sustained tone with slow stereo movement and subtle low-end hum",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tone with slow stereo movement and subtle low-end hum",
+      "concrete_summary": "soft sustained tone with slow stereo movement and subtle low-end hum (mean_loudness=-18.1dB; mid loudness vs catalog; loop≈403.7s; brightness=neutral; low_end=moderate; pulse_or_rhythm=very_subtle; stereo_motion=slow_movement; fingerprint=soft, continuous drone with a slight low-frequency undertone; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short guided intros, ambient background",
+      "avoid_when": "when clear, steady narration is needed",
+      "distinctive": "soft, continuous drone with a slight low-frequency undertone"
+    },
+    "tranquil_reflections": {
+      "code": "tranquil_reflections",
+      "display_name": "Tranquil reflections",
+      "source_filename": "TranquilReflections.mp3",
+      "objective": {
+        "duration_s": 499.3,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -21.3,
+        "max_volume_db": -2.1,
+        "loudness_vs_catalog": "among quieter third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft ambient hum",
+          "gentle sustained tones"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low-frequency drone with subtle shifts in tone",
+        "best_fit_scripts": "short guided imagery or relaxation prompts",
+        "avoid_scripts": "long-form narration or detailed dialogue",
+        "one_line": "soft ambient hum with gentle sustained tones and slow stereo movement",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft ambient hum with gentle sustained tones and slow stereo movement",
+      "concrete_summary": "soft ambient hum with gentle sustained tones and slow stereo movement (mean_loudness=-21.3dB; among quieter third of catalog; loop≈499.3s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a continuous low-frequency drone with subtle shifts in tone; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short guided imagery or relaxation prompts",
+      "avoid_when": "long-form narration or detailed dialogue",
+      "distinctive": "a continuous low-frequency drone with subtle shifts in tone"
+    },
+    "transient": {
+      "code": "transient",
+      "display_name": "Transient",
+      "source_filename": "06-Transient.mp3",
+      "objective": {
+        "duration_s": 940.8,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -18.3,
+        "max_volume_db": -1.8,
+        "loudness_vs_catalog": "among quieter third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft ambient drone",
+          "low-frequency hum"
+        ],
+        "pulse_or_rhythm": "very_subtle",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low drone with subtle shifts in tone",
+        "best_fit_scripts": "short narration with calm tone",
+        "avoid_scripts": "fast-paced dialogue or high-energy voiceovers",
+        "one_line": "soft ambient drone with slow tonal shifts and moderate low-end presence",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft ambient drone with slow tonal shifts and moderate low-end presence",
+      "concrete_summary": "soft ambient drone with slow tonal shifts and moderate low-end presence (mean_loudness=-18.3dB; among quieter third of catalog; loop≈940.8s; brightness=neutral; low_end=moderate; pulse_or_rhythm=very_subtle; stereo_motion=slow_movement; fingerprint=a continuous low drone with subtle shifts in tone; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short narration with calm tone",
+      "avoid_when": "fast-paced dialogue or high-energy voiceovers",
+      "distinctive": "a continuous low drone with subtle shifts in tone"
+    },
+    "tuning": {
+      "code": "tuning",
+      "display_name": "Tuning",
+      "source_filename": "59-TUNING.mp3",
+      "objective": {
+        "duration_s": 613.5,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -18.4,
+        "max_volume_db": -1.6,
+        "loudness_vs_catalog": "among quieter third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "sustained tone",
+          "soft high-frequency hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "neutral",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous, soft, high-pitched tone with subtle shifts in volume",
+        "best_fit_scripts": "short guided instructions or brief announcements",
+        "avoid_scripts": "long-form narration or detailed dialogue",
+        "one_line": "soft, continuous tone with slow shifts in volume and frequency",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft, continuous tone with slow shifts in volume and frequency",
+      "concrete_summary": "soft, continuous tone with slow shifts in volume and frequency (mean_loudness=-18.4dB; among quieter third of catalog; loop≈613.5s; brightness=neutral; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a continuous, soft, high-pitched tone with subtle shifts in volume; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short guided instructions or brief announcements",
+      "avoid_when": "long-form narration or detailed dialogue",
+      "distinctive": "a continuous, soft, high-pitched tone with subtle shifts in volume"
+    },
+    "winter": {
+      "code": "winter",
+      "display_name": "Winter",
+      "source_filename": "Winter.mp3",
+      "objective": {
+        "duration_s": 488.6,
+        "sample_rate": 44100,
+        "channels": 2,
+        "mean_volume_db": -15.6,
+        "max_volume_db": -1.8,
+        "loudness_vs_catalog": "among louder third of catalog"
+      },
+      "listener_model": "gpt-audio-mini",
+      "clip_seconds": 25,
+      "clip_start_seconds": 20,
+      "listen": {
+        "audible_layers": [
+          "soft sustained tones",
+          "low hum"
+        ],
+        "pulse_or_rhythm": "none",
+        "brightness": "dark",
+        "stereo_motion": "slow_movement",
+        "low_end": "moderate",
+        "would_distract_under_voice": "maybe",
+        "concrete_fingerprint": "a continuous low drone with subtle shifts in tone",
+        "best_fit_scripts": "short narration with calm tone",
+        "avoid_scripts": "loud or fast-paced voiceovers",
+        "one_line": "soft sustained tones with a low hum and slow stereo movement",
+        "confidence_0_to_5": 4
+      },
+      "one_line": "soft sustained tones with a low hum and slow stereo movement",
+      "concrete_summary": "soft sustained tones with a low hum and slow stereo movement (mean_loudness=-15.6dB; among louder third of catalog; loop≈488.6s; brightness=dark; low_end=moderate; pulse_or_rhythm=none; stereo_motion=slow_movement; fingerprint=a continuous low drone with subtle shifts in tone; under_voice_risk=maybe; listen_confidence=4/5)",
+      "best_for": "short narration with calm tone",
+      "avoid_when": "loud or fast-paced voiceovers",
+      "distinctive": "a continuous low drone with subtle shifts in tone"
+    }
+  },
+  "notes": "v2: objective loudness/duration + strict listen; marketing 432 strings scrubbed"
+}

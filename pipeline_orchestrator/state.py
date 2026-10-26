@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import operator
-from typing import Annotated, Literal, TypedDict
+from typing import Annotated, Any, Literal, TypedDict
 
 from typing_extensions import NotRequired
 
 PipelineStage = Literal[
     "route",
     "compose",
+    "qa_repair",
     "enhance",
     "tts",
     "download",
@@ -21,7 +22,9 @@ TERMINAL_STAGES = frozenset({"done", "failed"})
 
 ENHANCE_FAILURE_STATUSES = frozenset({"FAILED_ENHANCEMENT", "REVIEW_REQUIRED"})
 ENHANCE_IN_PROGRESS_STATUSES = frozenset({"PENDING_ENHANCEMENT", "ENHANCING", "CREATED"})
-ENHANCE_SUCCESS_STATUS = "APPROVED"
+# Auto path lands on ENHANCED; Script Hub / human path may use APPROVED.
+ENHANCE_SUCCESS_STATUSES = frozenset({"ENHANCED", "APPROVED"})
+ENHANCE_SUCCESS_STATUS = "ENHANCED"  # primary target for wait polls
 
 TTS_SUCCESS_STATUS = "COMPLETED"
 TTS_RETRYABLE_STATUSES = frozenset({"REVIEW_REQUIRED", "FAILED", "PARTIALLY_FAILED"})
@@ -41,10 +44,18 @@ class PipelineState(TypedDict):
     audio_job_id: NotRequired[str | None]
     local_mp3_path: NotRequired[str | None]
 
+    compose_brief: NotRequired[dict[str, Any] | None]
     compose_attempts: NotRequired[int]
+    repair_attempts: NotRequired[int]
     enhance_attempts: NotRequired[int]
     tts_attempts: NotRequired[int]
     tts_reenqueue: NotRequired[bool]
+
+    qa_report: NotRequired[dict[str, Any] | None]
+    fix_plan: NotRequired[dict[str, Any] | None]
+    qa_history: NotRequired[list[dict[str, Any]]]
+    decision_log: NotRequired[list[dict[str, Any]]]
+    brain_steps: NotRequired[int]
 
     last_error: NotRequired[str | None]
     last_transcript_status: NotRequired[str | None]
@@ -66,15 +77,21 @@ def initial_state(
     skip_compose: bool = False,
     skip_tts: bool = False,
     correlation_id: str | None = None,
+    compose_brief: dict[str, Any] | None = None,
 ) -> PipelineState:
     return {
         "stage": "route",
         "correlation_id": correlation_id,
         "transcript_id": transcript_id,
         "audio_job_id": audio_job_id,
+        "compose_brief": compose_brief,
         "compose_attempts": 0,
+        "repair_attempts": 0,
         "enhance_attempts": 0,
         "tts_attempts": 0,
+        "qa_history": [],
+        "decision_log": [],
+        "brain_steps": 0,
         "skip_compose": skip_compose,
         "skip_tts": skip_tts,
         "log": [],

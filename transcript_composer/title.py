@@ -21,6 +21,13 @@ WOUND_DISPLAY: dict[str, str] = {
     "bo_02": "grief unprocessed",
     "bo_03": "identity after role",
     "bo_04": "disconnection from body",
+    # First-10 overlay wounds
+    "wk_04": "organisational betrayal",
+    "wk_05": "purpose at work",
+    "wk_06": "age / tech obsolescence",
+    "ph_01": "chronic pain",
+    "ph_03": "fatigue / burnout",
+    "fr_01": "friendship loss",
 }
 
 GENERATION_DISPLAY: dict[str, str] = {

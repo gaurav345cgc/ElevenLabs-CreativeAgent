@@ -79,6 +79,18 @@ class AudioJobIntakeService:
 
         existing = self._audio_job_repo.find_audio_job_by_idempotency_key(session, idempotency_key)
         if existing is not None:
+            status = (
+                existing.status
+                if isinstance(existing.status, AudioJobStatus)
+                else AudioJobStatus(str(existing.status))
+            )
+            # Idempotent re-enqueue must clear terminal failure so PlanChunks can run.
+            if status in (AudioJobStatus.FAILED, AudioJobStatus.PARTIALLY_FAILED):
+                existing = self._audio_job_repo.mark_job_created_for_retry(
+                    session,
+                    existing.id,
+                    correlation_id=request.correlation_id,
+                )
             log_tts_job_created(
                 **tts_context_from_job(
                     existing,

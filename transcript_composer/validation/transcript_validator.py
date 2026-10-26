@@ -4,16 +4,19 @@ from __future__ import annotations
 
 from models.agents import Agent1Output
 from models.requests import CreateTranscriptRequest
-from transcript_composer.knowledge.loader import get_examples, get_pattern_index
+from transcript_composer.knowledge.loader import get_examples
 from transcript_composer.knowledge.models import PatternSelectionContext
 from transcript_composer.knowledge.pattern_selector import PatternSelector
 from transcript_composer.llm_config import (
-    ModelProviderConfigError,
     resolve_openai_api_key,
     resolve_validation_mode,
 )
 from transcript_composer.validation.llm_validator import OpenAITranscriptValidator
 from transcript_composer.validation.models import TranscriptValidationReport, ValidationSeverity
+from transcript_composer.validation.pain_pillar_agent import (
+    PainPillarAgent,
+    run_pain_pillar_qa,
+)
 from transcript_composer.validation.rules import (
     check_canonical_beats,
     check_composer_guidance_leakage,
@@ -55,6 +58,7 @@ class TranscriptValidator:
         selector: PatternSelector | None = None,
         validation_mode: str | None = None,
         llm_validator: OpenAITranscriptValidator | None = None,
+        pain_pillar_agent: PainPillarAgent | None = None,
     ) -> None:
         self._selector = selector or PatternSelector()
         self._index = self._selector._index
@@ -64,6 +68,7 @@ class TranscriptValidator:
         }
         self._mode = _resolve_mode(validation_mode)
         self._llm_validator = llm_validator
+        self._pain_pillar_agent = pain_pillar_agent
 
     @property
     def validation_mode(self) -> str:
@@ -77,6 +82,7 @@ class TranscriptValidator:
         fail_on_warning: bool = False,
     ) -> TranscriptValidationReport:
         plan_pairs = [(slot.slot, slot.pattern_family) for slot in output.pattern_plan.slots]
+        # Always-on hard floor (both openai and rules modes).
         hard_issues = [
             *check_section_structure(output.sectioned_script),
             *check_session_theme(request, output.sectioned_script),
@@ -91,6 +97,11 @@ class TranscriptValidator:
                 self._examples,
                 pattern_families={slot.pattern_family for slot in output.pattern_plan.slots},
             ),
+            *run_pain_pillar_qa(
+                request,
+                output,
+                agent=self._pain_pillar_agent,
+            ),
         ]
 
         if self._mode == "openai":
@@ -99,16 +110,19 @@ class TranscriptValidator:
                 output,
                 fail_on_warning=fail_on_warning,
             )
-            # In OpenAI mode, the LLM is a qualitative reviewer. We do not allow it
-            # to hard-fail composition, because it can mis-grade tone/duration/beat
-            # coverage. Deterministic checks remain mandatory.
+            # Qualitative LLM reviewer stays advisory; pain_pillar_qa is separate and
+            # already evidence-gated inside hard_issues.
             qualitative = _downgrade_llm_errors_to_warnings(qualitative)
             report = _merge_reports(hard_issues, qualitative, fail_on_warning=fail_on_warning)
-            report = report.model_copy(update={"validator": "openai"})
-            return report
+            return report.model_copy(update={"validator": "openai"})
 
         rule_issues = self._validate_with_rules(request, output)
-        report = _finalize_report(rule_issues, fail_on_warning=fail_on_warning)
+        # Merge always-on hard checks with the rest of the rules engine (dedupe by
+        # code+message+slot so structure / guidance / verbatim are not double-counted).
+        report = _finalize_report(
+            _dedupe_issues([*hard_issues, *rule_issues]),
+            fail_on_warning=fail_on_warning,
+        )
         return report.model_copy(update={"validator": "rules"})
 
     def _validate_with_openai(
@@ -174,6 +188,8 @@ class TranscriptValidator:
                 self._examples,
                 pattern_families={family for _, family in plan_pairs},
             ),
+            *check_session_theme(request, output.sectioned_script),
+            *check_relatability_pack(request, output.sectioned_script),
         ]
 
     def validate_or_raise(
@@ -190,6 +206,18 @@ class TranscriptValidator:
                 report=report,
             )
         return report
+
+
+def _dedupe_issues(issues: list) -> list:
+    seen: set[tuple[str, str, str | None]] = set()
+    out: list = []
+    for issue in issues:
+        key = (issue.code, issue.message, issue.slot)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(issue)
+    return out
 
 
 def _merge_reports(

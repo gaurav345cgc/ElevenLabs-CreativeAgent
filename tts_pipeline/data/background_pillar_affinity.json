@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "notes": "Ranked preferred beds per pillar/wound using objective loudness + strict listen traits. Quieter/darker for rest & depth; measured/mid for cognitive/work; grounded for somatic.",
+  "pillars": {
+    "p01": {
+      "label": "Mindful Awareness",
+      "preferred": ["bilateral_stillness", "pure_ambient", "tuning", "calmness", "tranquil_reflections"],
+      "avoid": ["the_deep", "forever"]
+    },
+    "p02": {
+      "label": "Emotional Regulation",
+      "preferred": ["sanctuary", "bilateral_tranquility", "replenish", "blessing", "calm_ambient_01"],
+      "avoid": ["winter", "forgotten_place"]
+    },
+    "p03": {
+      "label": "Somatic Healing",
+      "preferred": ["earth", "bilateral_stillness", "tuning", "replenish", "just_relax"],
+      "avoid": ["floating", "blossom"]
+    },
+    "p04": {
+      "label": "Deep Rest & Sleep",
+      "preferred": ["peaceful_sleep", "replenish", "bilateral_stillness", "sanctuary", "tranquil_reflections"],
+      "avoid": ["calm_ambient_01", "ambient_light", "reflections"]
+    },
+    "p05": {
+      "label": "Cognitive Clarity",
+      "preferred": ["timing", "light_and_balanced", "ambient_light", "pure_ambient", "evolving_pads"],
+      "avoid": ["the_deep", "peaceful_sleep", "forever"]
+    },
+    "p06": {
+      "label": "Relational Wellbeing",
+      "preferred": ["blessing", "sanctuary", "reflections", "tranquil_reflections", "bilateral_tranquility"],
+      "avoid": ["the_deep", "winter"]
+    },
+    "p07": {
+      "label": "Spiritual Inquiry",
+      "preferred": ["bilateral_eternal", "the_deep", "deeper_meaning", "tuning", "sanctuary"],
+      "avoid": ["just_relax", "light_and_balanced"]
+    },
+    "p12": {
+      "label": "Generativity",
+      "preferred": ["blossom", "earth", "forever", "deeper_meaning", "blessing"],
+      "avoid": ["frozen_in_time", "forgotten_place"]
+    }
+  },
+  "wounds": {
+    "wk_04": {
+      "label": "organisational betrayal",
+      "preferred": ["sanctuary", "earth", "timing", "bilateral_stillness"],
+      "avoid": ["blossom", "floating"]
+    },
+    "wk_05": {
+      "label": "purpose at work",
+      "preferred": ["deeper_meaning", "timing", "earth", "evolving_pads"],
+      "avoid": ["peaceful_sleep"]
+    },
+    "wk_06": {
+      "label": "age / tech obsolescence",
+      "preferred": ["timing", "earth", "frozen_in_time", "light_and_balanced", "pure_ambient"],
+      "avoid": ["blossom", "peaceful_sleep"]
+    },
+    "wk_05_proxy_gx_03": {
+      "label": "purpose displacement proxy",
+      "preferred": ["deeper_meaning", "timing", "earth"],
+      "avoid": []
+    },
+    "ph_01": {
+      "label": "chronic pain",
+      "preferred": ["earth", "bilateral_stillness", "replenish", "just_relax"],
+      "avoid": ["the_deep", "ambient_light"]
+    },
+    "ph_03": {
+      "label": "fatigue / burnout",
+      "preferred": ["replenish", "peaceful_sleep", "sanctuary", "bilateral_stillness"],
+      "avoid": ["calm_ambient_01", "reflections"]
+    },
+    "fr_01": {
+      "label": "friendship loss",
+      "preferred": ["forgotten_place", "blessing", "sanctuary", "reflections", "winter"],
+      "avoid": ["blossom", "timing"]
+    },
+    "bo_02": {
+      "label": "grief unprocessed",
+      "preferred": ["the_deep", "bilateral_eternal", "winter", "forgotten_place"],
+      "avoid": ["blossom", "light_and_balanced"]
+    },
+    "gz_02": {
+      "label": "belonging without roots",
+      "preferred": ["sanctuary", "forgotten_place", "bilateral_tranquility"],
+      "avoid": []
+    },
+    "ml_02": {
+      "label": "chronic overextension",
+      "preferred": ["replenish", "sanctuary", "just_relax", "peaceful_sleep"],
+      "avoid": ["timing", "ambient_light"]
+    }
+  }
+}

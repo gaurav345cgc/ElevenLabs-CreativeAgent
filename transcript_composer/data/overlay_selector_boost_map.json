@@ -1,0 +1,400 @@
+{
+  "schema_version": "1.0",
+  "purpose": "overlay_pattern_index_gap_fill",
+  "wounds": {
+    "wk_04": {
+      "product_code": "WK-04",
+      "index_wound_id_label": "WK-04",
+      "display_name": "Organisational Betrayal",
+      "generation_codes": [
+        "gen_x",
+        "millennial"
+      ],
+      "stage_numbers": [
+        2,
+        3,
+        4
+      ],
+      "primary_pillar": "p02",
+      "secondary_pillars": [],
+      "proxy_wound_id_deprecated": "gx_04",
+      "high_scoring_pattern_families": [
+        "opening_intro",
+        "settling_grounding",
+        "somatic_scan",
+        "breath_attention",
+        "mind_reframing_kindness",
+        "closing_transition"
+      ],
+      "preferred_variants": [
+        "guided_meditation_intro",
+        "softening_settling_awareness",
+        "somatic_scan_awareness",
+        "breath_attention",
+        "mind_reframing_kindness",
+        "closing_transition"
+      ],
+      "variants_by_slot": {
+        "opening": [
+          "guided_meditation_intro"
+        ],
+        "settling": [
+          "softening_settling_awareness"
+        ],
+        "body": [
+          "somatic_scan_awareness"
+        ],
+        "breath": [
+          "breath_attention"
+        ],
+        "mind_heart": [
+          "mind_reframing_kindness"
+        ],
+        "closing": [
+          "closing_transition"
+        ]
+      },
+      "new_variants": [],
+      "contrast_wound_ids": [
+        "gx_01",
+        "wk_06",
+        "wk_05"
+      ],
+      "mood_keywords": [
+        "gave them everything",
+        "let down",
+        "should have seen it coming",
+        "anger and grief"
+      ]
+    },
+    "wk_05": {
+      "product_code": "WK-05",
+      "index_wound_id_label": "WK-05",
+      "display_name": "Purpose at Work",
+      "generation_codes": [
+        "gen_x",
+        "millennial"
+      ],
+      "stage_numbers": [
+        3,
+        4,
+        5
+      ],
+      "primary_pillar": "p07",
+      "secondary_pillars": [
+        "p05"
+      ],
+      "proxy_wound_id_deprecated": "gx_03",
+      "high_scoring_pattern_families": [
+        "opening_intro",
+        "settling_grounding",
+        "somatic_scan",
+        "breath_attention",
+        "mind_reframing_oneness",
+        "closing_transition"
+      ],
+      "preferred_variants": [
+        "opening_intro_spaciousness",
+        "softening_settling_awareness",
+        "somatic_scan_exploration",
+        "breath_spaciousness",
+        "mind_reframing_open_question",
+        "closing_transition"
+      ],
+      "variants_by_slot": {
+        "opening": [
+          "opening_intro_spaciousness"
+        ],
+        "settling": [
+          "softening_settling_awareness"
+        ],
+        "body": [
+          "somatic_scan_exploration"
+        ],
+        "breath": [
+          "breath_spaciousness"
+        ],
+        "mind_heart": [
+          "mind_reframing_open_question"
+        ],
+        "closing": [
+          "closing_transition"
+        ]
+      },
+      "new_variants": [
+        "mind_reframing_open_question"
+      ],
+      "contrast_wound_ids": [
+        "wk_06",
+        "wk_04",
+        "ml_01"
+      ],
+      "mood_keywords": [
+        "don't hate this job",
+        "missing the why",
+        "is this what it adds up to",
+        "steady but flat"
+      ]
+    },
+    "wk_06": {
+      "product_code": "WK-06",
+      "index_wound_id_label": "WK-06",
+      "display_name": "Age / Tech Obsolescence",
+      "generation_codes": [
+        "gen_x",
+        "boomer"
+      ],
+      "stage_numbers": [
+        2,
+        3
+      ],
+      "primary_pillar": "p05",
+      "secondary_pillars": [],
+      "proxy_wound_id_deprecated": "gx_02",
+      "high_scoring_pattern_families": [
+        "opening_intro",
+        "settling_grounding",
+        "somatic_scan",
+        "breath_attention",
+        "mind_reframing_kindness",
+        "closing_transition"
+      ],
+      "preferred_variants": [
+        "guided_meditation_intro",
+        "grounding_settling_posture",
+        "somatic_scan",
+        "breath_attention",
+        "mind_reframing_distinction",
+        "closing_transition"
+      ],
+      "variants_by_slot": {
+        "opening": [
+          "guided_meditation_intro"
+        ],
+        "settling": [
+          "grounding_settling_posture"
+        ],
+        "body": [
+          "somatic_scan"
+        ],
+        "breath": [
+          "breath_attention"
+        ],
+        "mind_heart": [
+          "mind_reframing_distinction"
+        ],
+        "closing": [
+          "closing_transition"
+        ]
+      },
+      "new_variants": [
+        "mind_reframing_distinction"
+      ],
+      "contrast_wound_ids": [
+        "wk_05",
+        "gx_01",
+        "bo_03"
+      ],
+      "mood_keywords": [
+        "tools keep changing",
+        "left behind",
+        "still useful",
+        "worth isn't a version number"
+      ]
+    },
+    "ph_01": {
+      "product_code": "PH-01",
+      "index_wound_id_label": "PH-01",
+      "display_name": "Chronic Pain",
+      "generation_codes": [
+        "boomer",
+        "gen_x"
+      ],
+      "stage_numbers": [
+        2,
+        3
+      ],
+      "primary_pillar": "p03",
+      "secondary_pillars": [],
+      "proxy_wound_id_deprecated": "bo_04",
+      "high_scoring_pattern_families": [
+        "opening_intro",
+        "settling_grounding",
+        "somatic_scan",
+        "breath_attention",
+        "mind_reframing_kindness",
+        "closing_transition"
+      ],
+      "preferred_variants": [
+        "guided_meditation_intro",
+        "grounding_settling_posture",
+        "somatic_scan_awareness",
+        "breath_attention",
+        "mind_reframing_kindness",
+        "closing_transition"
+      ],
+      "variants_by_slot": {
+        "opening": [
+          "guided_meditation_intro"
+        ],
+        "settling": [
+          "grounding_settling_posture"
+        ],
+        "body": [
+          "somatic_scan_awareness"
+        ],
+        "breath": [
+          "breath_attention"
+        ],
+        "mind_heart": [
+          "mind_reframing_kindness"
+        ],
+        "closing": [
+          "closing_transition"
+        ]
+      },
+      "new_variants": [],
+      "contrast_wound_ids": [
+        "ph_03",
+        "bo_04"
+      ],
+      "mood_keywords": [
+        "not going away",
+        "body as the enemy",
+        "people stop asking",
+        "living alongside the pain"
+      ]
+    },
+    "ph_03": {
+      "product_code": "PH-03",
+      "index_wound_id_label": "PH-03",
+      "display_name": "Fatigue / Burnout",
+      "generation_codes": [
+        "boomer",
+        "gen_x",
+        "millennial"
+      ],
+      "stage_numbers": [
+        2
+      ],
+      "primary_pillar": "p04",
+      "secondary_pillars": [],
+      "proxy_wound_id_deprecated": "bo_04",
+      "high_scoring_pattern_families": [
+        "opening_intro",
+        "settling_grounding",
+        "somatic_scan",
+        "breath_attention",
+        "affirmation_release",
+        "closing_transition"
+      ],
+      "preferred_variants": [
+        "guided_meditation_intro",
+        "grounding_settling_posture",
+        "softening_settling_awareness",
+        "somatic_scan",
+        "breath_attention",
+        "affirmation_rest_permission",
+        "closing_transition"
+      ],
+      "variants_by_slot": {
+        "opening": [
+          "guided_meditation_intro"
+        ],
+        "settling": [
+          "grounding_settling_posture",
+          "softening_settling_awareness"
+        ],
+        "body": [
+          "somatic_scan"
+        ],
+        "breath": [
+          "breath_attention"
+        ],
+        "mind_heart": [
+          "affirmation_rest_permission"
+        ],
+        "closing": [
+          "closing_transition"
+        ]
+      },
+      "new_variants": [
+        "affirmation_rest_permission"
+      ],
+      "contrast_wound_ids": [
+        "ph_01",
+        "bo_04",
+        "ml_02"
+      ],
+      "mood_keywords": [
+        "tired as the default",
+        "I'm fine",
+        "sleep doesn't restore",
+        "nowhere to be"
+      ]
+    },
+    "fr_01": {
+      "product_code": "FR",
+      "index_wound_id_label": "FR-01",
+      "display_name": "Friendship Loss",
+      "generation_codes": [
+        "gen_z",
+        "millennial"
+      ],
+      "stage_numbers": [
+        2,
+        3
+      ],
+      "primary_pillar": "p06",
+      "secondary_pillars": [],
+      "proxy_wound_id_deprecated": "gz_02",
+      "high_scoring_pattern_families": [
+        "opening_intro",
+        "settling_grounding",
+        "somatic_scan",
+        "breath_attention",
+        "mind_reframing_kindness",
+        "closing_transition"
+      ],
+      "preferred_variants": [
+        "guided_meditation_intro",
+        "grounding_settling_sitbones",
+        "self_love_somatic_scan",
+        "breath_spaciousness",
+        "mind_reframing_kindness",
+        "closing_transition"
+      ],
+      "variants_by_slot": {
+        "opening": [
+          "guided_meditation_intro"
+        ],
+        "settling": [
+          "grounding_settling_sitbones"
+        ],
+        "body": [
+          "self_love_somatic_scan"
+        ],
+        "breath": [
+          "breath_spaciousness"
+        ],
+        "mind_heart": [
+          "mind_reframing_kindness"
+        ],
+        "closing": [
+          "closing_transition"
+        ]
+      },
+      "new_variants": [],
+      "contrast_wound_ids": [
+        "gz_02",
+        "ml_04"
+      ],
+      "mood_keywords": [
+        "used to talk every day",
+        "when did it end",
+        "drifted",
+        "is it my fault"
+      ]
+    }
+  }
+}

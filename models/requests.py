@@ -10,6 +10,22 @@ from models.enums import EnhancementMode
 from models.validation import validate_taxonomy_combination
 
 
+class ComposeRepairIssue(BaseModel):
+    """One QA issue from a prior failed compose (orchestrator repair loop)."""
+
+    code: str = Field(min_length=1, max_length=64)
+    message: str = Field(default="", max_length=2000)
+    slot: str | None = Field(default=None, max_length=64)
+
+
+class ComposeRepairContext(BaseModel):
+    """Orchestrator-supplied repair brief after QA failure (Phase A templated)."""
+
+    previous_issues: list[ComposeRepairIssue] = Field(default_factory=list)
+    composer_instructions: str = Field(default="", max_length=8000)
+    repair_attempt: int = Field(default=1, ge=1, le=20)
+
+
 class CreateTranscriptRequest(BaseModel):
     """Intake payload for creating a transcript job (Agent 1)."""
 
@@ -26,6 +42,7 @@ class CreateTranscriptRequest(BaseModel):
     requested_output_mode: EnhancementMode = EnhancementMode.PLAIN_PASTE
     voice_model: str = Field(default="eleven_multilingual_v2", max_length=128)
     correlation_id: str | None = Field(default=None, max_length=128)
+    repair_context: ComposeRepairContext | None = None
 
     @field_validator("generation_code", "wound_id", "pillar_code", "content_type", mode="before")
     @classmethod

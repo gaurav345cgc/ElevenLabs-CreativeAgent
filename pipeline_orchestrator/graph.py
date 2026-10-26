@@ -1,4 +1,4 @@
-"""LangGraph workflow definition for compose -> enhance -> TTS."""
+"""LangGraph workflow definition for compose -> QA repair -> enhance -> TTS."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ from pipeline_orchestrator.nodes import (
     run_compose,
     run_download,
     run_enhance,
+    run_qa_repair,
     run_tts,
 )
 from pipeline_orchestrator.state import TERMINAL_STAGES, PipelineState
@@ -44,6 +45,7 @@ def build_pipeline_graph(
             event_type="graph_node",
             node="compose",
             correlation_id=state.get("correlation_id"),
+            repair_attempts=state.get("repair_attempts"),
         )
         return run_compose(
             state,
@@ -51,6 +53,16 @@ def build_pipeline_graph(
             settings=settings,
             compose_brief=compose_brief,
         )
+
+    def qa_repair_node(state: PipelineState) -> PipelineState:
+        log_orchestrator_event(
+            "graph node: qa_repair",
+            event_type="graph_node",
+            node="qa_repair",
+            correlation_id=state.get("correlation_id"),
+            repair_attempts=state.get("repair_attempts"),
+        )
+        return run_qa_repair(state, settings=settings)
 
     def enhance_node(state: PipelineState) -> PipelineState:
         log_orchestrator_event(
@@ -86,6 +98,7 @@ def build_pipeline_graph(
     graph = StateGraph(PipelineState)
     graph.add_node("route", route_node)
     graph.add_node("compose", compose_node)
+    graph.add_node("qa_repair", qa_repair_node)
     graph.add_node("enhance", enhance_node)
     graph.add_node("tts", tts_node)
     graph.add_node("download", download_node)
@@ -97,6 +110,7 @@ def build_pipeline_graph(
         _route_after,
         {
             "compose": "compose",
+            "qa_repair": "qa_repair",
             "enhance": "enhance",
             "tts": "tts",
             "download": "download",
@@ -108,7 +122,18 @@ def build_pipeline_graph(
     graph.add_conditional_edges(
         "compose",
         _route_after,
-        {"compose": "compose", "enhance": "enhance", "failed": END},
+        {
+            "compose": "compose",
+            "qa_repair": "qa_repair",
+            "enhance": "enhance",
+            "failed": END,
+        },
+    )
+
+    graph.add_conditional_edges(
+        "qa_repair",
+        _route_after,
+        {"compose": "compose", "failed": END},
     )
 
     graph.add_conditional_edges(

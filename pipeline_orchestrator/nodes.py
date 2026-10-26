@@ -17,10 +17,15 @@ from pipeline_orchestrator.errors import (
     retry_limit_for_error,
 )
 from pipeline_orchestrator.logging_util import log_pipeline_error, log_pipeline_step
+from pipeline_orchestrator.qa_repair import (
+    build_fix_plan,
+    format_qa_failure_message,
+    write_qa_failure_artifact,
+)
 from pipeline_orchestrator.state import (
     ENHANCE_FAILURE_STATUSES,
     ENHANCE_IN_PROGRESS_STATUSES,
-    ENHANCE_SUCCESS_STATUS,
+    ENHANCE_SUCCESS_STATUSES,
     TTS_RETRYABLE_STATUSES,
     TTS_SUCCESS_STATUS,
     PipelineState,
@@ -75,80 +80,20 @@ def route_entry(
     client: CreativeAgentClient,
 ) -> PipelineState:
     """Pick the first incomplete stage instead of always restarting at compose."""
+    from pipeline_orchestrator.resume import resolve_resume_cursor
+
     correlation_id = state.get("correlation_id") or str(uuid.uuid4())
-    updates: PipelineState = {
-        "correlation_id": correlation_id,
-        "log": _log(state, "routing pipeline entry"),
-    }
-
-    audio_job_id = state.get("audio_job_id")
-    if audio_job_id and not state.get("skip_tts"):
-        job = client.get_audio_job(UUID(audio_job_id))
-        status = job.get("status")
-        updates["last_audio_status"] = status
-        updates["last_error"] = client.resolve_audio_job_last_error(
-            UUID(audio_job_id),
-            correlation_id=correlation_id,
-            cached=job.get("last_error"),
-        )
-        updates["transcript_id"] = str(job.get("transcript_id"))
-        updates["transcript_version_id"] = str(job.get("transcript_version_id"))
-        if status == TTS_SUCCESS_STATUS:
-            updates["stage"] = "download"
-            return {**state, **updates}
-        if status in TTS_RETRYABLE_STATUSES:
-            updates["stage"] = "tts"
-            return {**state, **updates}
-        if status in {"CREATED", "PLANNING", "READY", "GENERATING"}:
-            updates["stage"] = "tts"
-            return {**state, **updates}
-        updates["stage"] = "tts"
-        return {**state, **updates}
-
-    transcript_id = state.get("transcript_id")
-    if transcript_id:
-        tx = client.get_transcript(UUID(transcript_id))
-        status = tx.get("status")
-        updates["last_transcript_status"] = status
-
-        if status == ENHANCE_SUCCESS_STATUS:
-            if state.get("skip_tts"):
-                updates["stage"] = "done"
-                updates["log"] = _log(state, "transcript already ENHANCED; TTS skipped")
-                return {**state, **updates}
-            updates["stage"] = "tts"
-            updates["log"] = _log(state, "transcript already ENHANCED; resuming at TTS")
-            return {**state, **updates}
-
-        if status in ENHANCE_FAILURE_STATUSES:
-            updates["stage"] = "enhance"
-            updates["log"] = _log(state, f"transcript {status}; resuming enhancement retry")
-            return {**state, **updates}
-
-        if status in ENHANCE_IN_PROGRESS_STATUSES:
-            updates["stage"] = "enhance"
-            updates["log"] = _log(state, f"transcript {status}; waiting for enhancement")
-            return {**state, **updates}
-
+    seeded = {**state, "correlation_id": correlation_id}
+    if state.get("skip_compose") and not state.get("transcript_id") and not state.get("audio_job_id"):
         return {
-            **state,
-            **_fail(
-                state,
-                "enhance",
-                f"transcript {transcript_id} has unsupported status {status}",
-            ),
-            **updates,
-        }
-
-    if state.get("skip_compose"):
-        return {
-            **state,
+            **seeded,
             **_fail(state, "compose", "no transcript_id and cannot start compose"),
+            "log": _log(state, "routing pipeline entry"),
         }
-
-    updates["stage"] = "compose"
-    updates["log"] = _log(state, "starting at compose (Agent 1)")
-    return {**state, **updates}
+    resolved = resolve_resume_cursor(seeded, client=client)
+    route_notes = _log(state, "routing pipeline entry")
+    resume_notes = list(resolved.get("log") or [])
+    return {**resolved, "log": [*route_notes, *resume_notes]}
 
 
 def _backoff_seconds(settings: OrchestratorSettings, attempt: int) -> float:
@@ -164,10 +109,28 @@ def run_compose(
 ) -> PipelineState:
     attempts = state.get("compose_attempts", 0)
     correlation_id = state.get("correlation_id")
+    brief = dict(state.get("compose_brief") or compose_brief)
     try:
-        created = client.compose_transcript(compose_brief, correlation_id=correlation_id)
+        created = client.compose_transcript(brief, correlation_id=correlation_id)
     except CreativeAgentApiError as exc:
         next_attempts = attempts + 1
+        # Phase A: structured QA failure → qa_repair (templated fix → recompose).
+        if exc.is_compose_qa_failure:
+            report = exc.validation_report or {}
+            return {
+                **state,
+                "compose_brief": brief,
+                "compose_attempts": next_attempts,
+                "qa_report": report,
+                "stage": "qa_repair",
+                "last_error": str(exc),
+                "log": _log(
+                    state,
+                    f"compose QA failed ({report.get('error_count', '?')} errors); "
+                    "routing to qa_repair",
+                ),
+            }
+
         limit = retry_limit_for_error(
             settings.max_compose_retries,
             third_party_extra=settings.max_third_party_retries,
@@ -178,32 +141,127 @@ def run_compose(
         transient = is_transient_third_party_error(str(exc), status_code=exc.status_code)
         if not exhausted and transient:
             time.sleep(_backoff_seconds(settings, attempts))
+        if exhausted:
+            return {
+                **state,
+                "compose_brief": brief,
+                "compose_attempts": next_attempts,
+                **_fail(state, "compose", "compose API call failed", last_error=str(exc)),
+            }
         return {
             **state,
+            "compose_brief": brief,
             "compose_attempts": next_attempts,
-            "stage": "failed" if exhausted else "compose",
-            **(
-                _fail(state, "compose", "compose API call failed", last_error=str(exc))
-                if exhausted
-                else {
-                    "last_error": str(exc),
-                    "log": _log(
-                        state,
-                        f"compose attempt {next_attempts} failed"
-                        f"{' (transient; will retry)' if transient else ''}: {exc}",
-                    ),
-                }
+            "stage": "compose",
+            "last_error": str(exc),
+            "log": _log(
+                state,
+                f"compose attempt {next_attempts} failed"
+                f"{' (transient; will retry)' if transient else ''}: {exc}",
             ),
         }
 
     transcript_id = str(created["transcript_id"])
     return {
         **state,
+        "compose_brief": brief,
         "transcript_id": transcript_id,
         "compose_attempts": attempts + 1,
+        "qa_report": None,
         "stage": "enhance",
         "last_transcript_status": created.get("status"),
         "log": _log(state, f"compose complete; transcript_id={transcript_id}"),
+    }
+
+
+def run_qa_repair(
+    state: PipelineState,
+    *,
+    settings: OrchestratorSettings,
+    extra_instructions: str | None = None,
+) -> PipelineState:
+    """Build templated FixPlan from qa_report and recompose with repair_context.
+
+    ``extra_instructions`` (from Orchestrator Brain) are appended after the
+    deterministic Phase A template — never replace the template floor.
+    """
+    report = state.get("qa_report")
+    plan = build_fix_plan(report if isinstance(report, dict) else None)
+    repair_attempts = int(state.get("repair_attempts") or 0)
+    max_repairs = settings.max_compose_repair_attempts
+    brain_extra = (extra_instructions or "").strip()
+    merged_instructions = plan.composer_instructions
+    if brain_extra:
+        merged_instructions = (
+            f"{plan.composer_instructions}\n\n"
+            f"Orchestrator brain additions:\n{brain_extra}"
+        )
+
+    history = list(state.get("qa_history") or [])
+    history.append(
+        {
+            "attempt": repair_attempts + 1,
+            "summary": plan.summary,
+            "root_causes": plan.root_causes,
+            "error_count": (report or {}).get("error_count") if isinstance(report, dict) else None,
+            "brain_extra": bool(brain_extra),
+        }
+    )
+
+    if repair_attempts >= max_repairs:
+        message = format_qa_failure_message(
+            plan, repair_attempts=repair_attempts, max_attempts=max_repairs
+        )
+        artifact = write_qa_failure_artifact(
+            settings.output_dir,
+            correlation_id=state.get("correlation_id"),
+            qa_report=report if isinstance(report, dict) else None,
+            fix_plan=plan.to_dict(),
+            compose_brief=state.get("compose_brief"),
+        )
+        failed = _fail(
+            state,
+            "compose",
+            message,
+            last_error=plan.summary,
+        )
+        failed["fix_hint"] = (
+            f"{merged_instructions}\n\n"
+            f"QA failure artifact: {artifact}"
+        )
+        failed["qa_history"] = history
+        failed["fix_plan"] = plan.to_dict()
+        return {**state, **failed}
+
+    brief = dict(state.get("compose_brief") or {})
+    brief["repair_context"] = {
+        "previous_issues": [
+            {
+                "code": item["code"],
+                "message": item.get("message") or "",
+                "slot": item.get("slot"),
+            }
+            for item in plan.issue_payloads
+        ],
+        "composer_instructions": merged_instructions,
+        "repair_attempt": repair_attempts + 1,
+    }
+    fix_dict = plan.to_dict()
+    fix_dict["composer_instructions"] = merged_instructions
+
+    return {
+        **state,
+        "compose_brief": brief,
+        "fix_plan": fix_dict,
+        "repair_attempts": repair_attempts + 1,
+        "qa_history": history,
+        "qa_report": None,
+        "stage": "compose",
+        "log": _log(
+            state,
+            f"qa_repair {repair_attempts + 1}/{max_repairs}: {plan.summary}"
+            + (" (+brain)" if brain_extra else ""),
+        ),
     }
 
 
@@ -223,12 +281,12 @@ def run_enhance(
 
     tx = client.get_transcript(tid)
     status = tx.get("status")
-    if status == ENHANCE_SUCCESS_STATUS:
+    if status in ENHANCE_SUCCESS_STATUSES:
         return {
             **state,
             "last_transcript_status": status,
             "stage": "done" if state.get("skip_tts") else "tts",
-            "log": _log(state, "enhancement already ENHANCED"),
+            "log": _log(state, f"enhancement already {status}"),
         }
 
     if status in ENHANCE_FAILURE_STATUSES:
@@ -273,7 +331,7 @@ def run_enhance(
     try:
         result = client.wait_for_transcript_status(
             tid,
-            target_statuses={ENHANCE_SUCCESS_STATUS},
+            target_statuses=set(ENHANCE_SUCCESS_STATUSES),
             failure_statuses=ENHANCE_FAILURE_STATUSES,
             deadline=deadline,
             correlation_id=correlation_id,
@@ -302,7 +360,7 @@ def run_enhance(
         }
 
     final_status = result.get("status")
-    if final_status == ENHANCE_SUCCESS_STATUS:
+    if final_status in ENHANCE_SUCCESS_STATUSES:
         return {
             **state,
             "last_transcript_status": final_status,

@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 from models.requests import CreateTranscriptRequest
+
+logger = logging.getLogger("creative_agent.composer.relatability")
 
 DATA_PATH = Path(__file__).resolve().parent / "data" / "first10_relatability_pack.json"
 
@@ -32,6 +35,16 @@ def _codes_by_product() -> dict[str, dict[str, Any]]:
         for entry in pack.get("codes", [])
         if entry.get("product_code")
     }
+
+
+def entry_by_product_code(product_code: str) -> dict[str, Any] | None:
+    """Lookup a First-10 pack entry by product code (e.g. WK-06, FR)."""
+    code = (product_code or "").strip().upper()
+    if not code:
+        return None
+    if code.startswith("FR") and code != "FR":
+        code = "FR"
+    return _codes_by_product().get(code)
 
 
 def _codes_by_wound() -> dict[str, dict[str, Any]]:
@@ -75,12 +88,29 @@ def resolve_relatability_entry(
     return None
 
 
+def _wound_in_pattern_index(wound_id: str) -> bool:
+    """True when at least one pattern row is tagged with this wound_id."""
+    from transcript_composer.knowledge.loader import get_pattern_index
+
+    wound = wound_id.strip().lower()
+    if not wound:
+        return False
+    return any(wound in pattern.wound_ids for pattern in get_pattern_index().patterns)
+
+
 def compose_wound_id_for_entry(entry: dict[str, Any]) -> str:
-    """Pattern-index wound to send on compose (preferred if known, else proxy)."""
+    """Pattern-index wound to send on compose (preferred if indexed, else proxy)."""
     preferred = (entry.get("wound_id_preferred") or "").strip().lower()
     proxy = (entry.get("wound_id_fallback_proxy") or "").strip().lower()
-    # Overlay preferred IDs are not in the pattern index yet — always prefer proxy when set.
+    if preferred and _wound_in_pattern_index(preferred):
+        return preferred
     if proxy:
+        if preferred and preferred != proxy:
+            logger.warning(
+                "overlay wound %s not in pattern index; falling back to proxy %s",
+                preferred,
+                proxy,
+            )
         return proxy
     return preferred or "ml_02"
 

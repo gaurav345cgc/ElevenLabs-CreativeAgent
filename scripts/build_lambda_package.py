@@ -31,7 +31,8 @@ SKIP_RUNTIME_PACKAGES = frozenset({"alembic", "mako"})
 
 _BASE_REQUIREMENTS = (
     "pydantic>=2.0",
-    "sqlalchemy>=2.0",
+    # 2.1+ defaults postgresql:// to psycopg (v3); we ship psycopg2-binary.
+    "sqlalchemy>=2.0,<2.1",
     "psycopg2-binary>=2.9",
 )
 

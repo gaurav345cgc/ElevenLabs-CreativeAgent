@@ -17,6 +17,7 @@ from transcript_composer.duration import (
 from transcript_composer.knowledge.models import RankedExample
 from transcript_composer.knowledge.pattern_selector import PatternSelector
 from transcript_composer.relatability import format_relatability_block
+from transcript_composer.repair import format_repair_block
 from transcript_composer.theme import format_session_theme_block
 from transcript_composer.llm_config import (
     ModelProviderConfigError,
@@ -324,6 +325,7 @@ def _build_section_prompt(
     principles = ", ".join(request.principles) if request.principles else "(none)"
     theme_block = format_session_theme_block(request)
     relatability_block = format_relatability_block(request)
+    repair_block = format_repair_block(request)
     session_budget = budget or build_session_duration_budget(
         request.target_duration_minutes
     )
@@ -366,6 +368,7 @@ def _build_section_prompt(
 """
 
     relatability_section = f"\n{relatability_block}\n" if relatability_block else ""
+    repair_section = f"\n{repair_block}\n" if repair_block else ""
 
     return f"""Compose the **{SLOT_LABELS.get(slot, slot)}** section (`{slot}`) for this guided meditation.
 
@@ -391,6 +394,7 @@ Listener mindset: one tired, busy person — clear, sparse, kind. No filler.
 
 {theme_block}
 {relatability_section}
+{repair_section}
 ## Brief / taxonomy (codes are internal — speak the theme, not the codes)
 - content_type: {request.content_type}
 - generation: {request.generation_code}

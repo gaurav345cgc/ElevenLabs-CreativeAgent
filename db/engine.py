@@ -18,9 +18,13 @@ def get_database_url() -> str:
 
 def create_db_engine(database_url: str | None = None, *, echo: bool = False) -> Engine:
     url = database_url or get_database_url()
+    # Prefer psycopg2 dialect explicitly (matches Lambda package; SQLAlchemy 2.1+
+    # otherwise resolves bare postgresql:// to psycopg v3).
+    if url.startswith("postgresql://"):
+        url = "postgresql+psycopg2://" + url.removeprefix("postgresql://")
     # Fail fast in Lambda/VPC networking misconfigurations (default can hang for minutes).
     connect_args: dict[str, object] = {}
-    if url.startswith("postgresql://"):
+    if "+psycopg2://" in url or url.startswith("postgresql://"):
         connect_args["connect_timeout"] = int(os.environ.get("CREATIVE_AGENT_DB_CONNECT_TIMEOUT", "8"))
     return create_engine(
         url,

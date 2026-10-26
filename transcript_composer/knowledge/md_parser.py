@@ -18,6 +18,7 @@ from transcript_composer.knowledge.taxonomy import (
     extract_wound_id_from_text,
     normalize_generation,
     normalize_wound_id,
+    parse_generation_codes,
     parse_pillar_codes,
     parse_stage_numbers,
 )
@@ -100,14 +101,12 @@ def parse_pattern_index_markdown(text: str) -> PatternIndexDocument:
             if len(cells) < 4 or cells[0].lower() == "generation":
                 continue
 
-            generation = normalize_generation(cells[0])
             wound_cell = cells[2] if len(cells) > 2 else ""
             stage_cell = cells[3] if len(cells) > 3 else ""
             pillar_cell = cells[6] if len(cells) > 6 else cells[5] if len(cells) > 5 else ""
             mood_cell = cells[-1] if cells else ""
 
-            if generation:
-                _merge_unique(generation_codes, [generation])
+            _merge_unique(generation_codes, parse_generation_codes(cells[0]))
 
             expanded = expand_wound_ids(wound_cell)
             if expanded:

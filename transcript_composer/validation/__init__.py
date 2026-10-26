@@ -6,6 +6,11 @@ from transcript_composer.validation.models import (
     ValidationIssue,
     ValidationSeverity,
 )
+from transcript_composer.validation.pain_pillar_agent import (
+    PainPillarAgent,
+    evidence_quote_in_script,
+    run_pain_pillar_qa,
+)
 from transcript_composer.validation.transcript_validator import (
     TranscriptValidationError,
     TranscriptValidator,
@@ -13,9 +18,12 @@ from transcript_composer.validation.transcript_validator import (
 
 __all__ = [
     "OpenAITranscriptValidator",
+    "PainPillarAgent",
     "TranscriptValidationError",
     "TranscriptValidationReport",
     "TranscriptValidator",
     "ValidationIssue",
     "ValidationSeverity",
+    "evidence_quote_in_script",
+    "run_pain_pillar_qa",
 ]

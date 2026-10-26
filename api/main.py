@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import socket
 
@@ -121,10 +122,13 @@ def create_app() -> FastAPI:
         exc: RequestValidationError,
     ) -> JSONResponse:
         correlation_id = request.headers.get("x-correlation-id")
+        # FastAPI may put exception objects in error ctx (e.g. TaxonomyValidationError);
+        # those are not JSON-serializable and used to crash into a bare 500.
+        safe_errors = json.loads(json.dumps(exc.errors(), default=str))
         envelope = ErrorEnvelope(
             error_code=ErrorCode.VALIDATION_ERROR,
             message="Request validation failed",
-            details={"errors": exc.errors()},
+            details={"errors": safe_errors},
             correlation_id=correlation_id,
         )
         return JSONResponse(
@@ -146,6 +150,33 @@ def create_app() -> FastAPI:
         )
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
+            content=envelope.model_dump(mode="json"),
+        )
+
+    @app.exception_handler(Exception)
+    async def unhandled_exception_handler(
+        request: Request,
+        exc: Exception,
+    ) -> JSONResponse:
+        """Return JSON details instead of opaque API Gateway 'Internal Server Error'."""
+        import logging
+
+        correlation_id = request.headers.get("x-correlation-id")
+        logging.getLogger("creative_agent.api").exception(
+            "unhandled API error path=%s", request.url.path
+        )
+        envelope = ErrorEnvelope(
+            error_code=ErrorCode.INTERNAL_ERROR,
+            message="Internal server error during request",
+            details={
+                "error_type": type(exc).__name__,
+                "error": str(exc)[:2000],
+                "path": request.url.path,
+            },
+            correlation_id=correlation_id,
+        )
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=envelope.model_dump(mode="json"),
         )
 
@@ -182,6 +213,25 @@ def create_app() -> FastAPI:
             checks["openai_https"] = {"ok": r.status_code < 500, "status_code": r.status_code}
         except Exception as exc:
             checks["openai_https"] = {"ok": False, "error": str(exc)}
+
+        # Auth check against the key the Lambda actually uses (env or Secrets Manager).
+        try:
+            from transcript_composer.llm_config import resolve_openai_api_key
+
+            key = resolve_openai_api_key()
+            if not key:
+                checks["openai_auth"] = {"ok": False, "error": "no OpenAI API key configured"}
+            else:
+                from openai import OpenAI
+
+                OpenAI(api_key=key).models.list()
+                checks["openai_auth"] = {"ok": True}
+        except Exception as exc:
+            checks["openai_auth"] = {
+                "ok": False,
+                "error_type": type(exc).__name__,
+                "error": str(exc)[:500],
+            }
 
         return result
 

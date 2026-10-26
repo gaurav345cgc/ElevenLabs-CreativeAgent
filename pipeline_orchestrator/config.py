@@ -55,14 +55,17 @@ class OrchestratorSettings:
     enhancement_timeout_seconds: float = 15 * 60
     tts_timeout_seconds: float = 25 * 60
     max_compose_retries: int = 2
+    max_compose_repair_attempts: int = 3
     max_enhance_retries: int = 3
     max_tts_retries: int = 3
+    max_brain_steps: int = 24
     max_third_party_retries: int = 3
     third_party_retry_backoff_seconds: float = 5.0
     api_request_retries: int = 3
     voice_profile_code: str = DEFAULT_VOICE_PROFILE
     output_dir: Path = field(default_factory=lambda: Path("output"))
     accept_partial_tts: bool = False
+    orchestrator_mode: str = "auto"  # auto | agentic | graph
 
     @classmethod
     def from_env(

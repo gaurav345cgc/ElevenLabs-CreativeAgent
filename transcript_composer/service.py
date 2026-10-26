@@ -67,6 +67,12 @@ class Agent1Service:
                             "relatability_opening_weak",
                             "relatability_pillar_missing",
                             "relatability_forbidden",
+                            "relatability_better_match",
+                            "pain_pillar_wound_weak",
+                            "pain_pillar_pillar_mismatch",
+                            "pain_pillar_better_match",
+                            "pain_pillar_generic",
+                            "pain_pillar_mind_heart_miss",
                         }
                         for issue in exc.report.issues
                     )

@@ -10,6 +10,23 @@ GENERATION_ALIASES: dict[str, str] = {
     "gen x": "gen_x",
     "boomer": "boomer",
     "all": "all_generations",
+    "cross-generational": "all_generations",
+    "cross generational": "all_generations",
+}
+
+# Bare product codes / aliases → canonical wound_id slugs.
+WOUND_ID_ALIASES: dict[str, str] = {
+    "fr": "fr_01",
+}
+
+# Safety-net stage rules for First-10 overlays (also derived from index rows).
+OVERLAY_WOUND_STAGE_RULES: dict[str, frozenset[int]] = {
+    "wk_04": frozenset({2, 3, 4}),
+    "wk_05": frozenset({3, 4, 5}),
+    "wk_06": frozenset({2, 3}),
+    "ph_01": frozenset({2, 3}),
+    "ph_03": frozenset({2}),
+    "fr_01": frozenset({2, 3}),
 }
 
 FAMILY_COMPOSITION_SLOTS: dict[str, str] = {
@@ -47,6 +64,19 @@ def normalize_generation(raw: str) -> str | None:
     return GENERATION_ALIASES.get(value)
 
 
+def parse_generation_codes(raw: str) -> list[str]:
+    """Parse one or more generation labels (supports ``Gen X / Millennial`` cells)."""
+    value = raw.strip()
+    if not value or value in {"—", "-"}:
+        return []
+    codes: list[str] = []
+    for part in re.split(r"\s*/\s*", value):
+        gen = normalize_generation(part)
+        if gen and gen not in codes:
+            codes.append(gen)
+    return codes
+
+
 def normalize_wound_id(raw: str) -> str | None:
     value = raw.strip()
     if not value or value in {"—", "-"}:
@@ -60,7 +90,7 @@ def normalize_wound_id(raw: str) -> str | None:
     if lowered.startswith("any "):
         return None
 
-    return lowered
+    return WOUND_ID_ALIASES.get(lowered, lowered)
 
 
 def expand_wound_ids(raw: str) -> list[str]:

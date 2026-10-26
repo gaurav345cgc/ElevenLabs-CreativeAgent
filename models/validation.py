@@ -37,21 +37,31 @@ GENERATION_CODES: frozenset[str] = frozenset(
 
 
 def _load_wound_stage_rules() -> dict[str, frozenset[int]]:
+    from transcript_composer.knowledge.taxonomy import OVERLAY_WOUND_STAGE_RULES
+
+    rules: dict[str, set[int]] = {
+        wound_id: set(stages) for wound_id, stages in OVERLAY_WOUND_STAGE_RULES.items()
+    }
     try:
         from transcript_composer.knowledge.loader import load_pattern_index
 
-        rules: dict[str, set[int]] = {}
         for pattern in load_pattern_index().patterns:
             for wound_id in pattern.wound_ids:
                 rules.setdefault(wound_id, set()).update(pattern.stage_numbers)
-        if rules:
-            return {wound_id: frozenset(stages) for wound_id, stages in rules.items()}
     except (FileNotFoundError, OSError, ValueError):
         pass
-    return {
-        "ml_02": frozenset({1, 2, 3, 4, 5, 6}),
-        "gz_01": frozenset({1, 2, 3, 4, 5, 6}),
-    }
+    if not rules:
+        return {
+            "ml_02": frozenset({1, 2, 3, 4, 5, 6}),
+            "gz_01": frozenset({1, 2, 3, 4, 5, 6}),
+        }
+    return {wound_id: frozenset(stages) for wound_id, stages in rules.items()}
+
+
+def reset_wound_stage_rules_cache() -> None:
+    """Clear cached wound/stage rules (call after index reload in tests)."""
+    global _WOUND_STAGE_RULES
+    _WOUND_STAGE_RULES = None
 
 
 _WOUND_STAGE_RULES: dict[str, frozenset[int]] | None = None

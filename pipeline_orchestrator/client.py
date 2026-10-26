@@ -19,9 +19,29 @@ logger = logging.getLogger("creative_agent.orchestrator")
 
 
 class CreativeAgentApiError(RuntimeError):
-    def __init__(self, message: str, *, status_code: int | None = None) -> None:
+    def __init__(
+        self,
+        message: str,
+        *,
+        status_code: int | None = None,
+        body: dict[str, Any] | None = None,
+    ) -> None:
         super().__init__(message)
         self.status_code = status_code
+        self.body: dict[str, Any] = body or {}
+
+    @property
+    def validation_report(self) -> dict[str, Any] | None:
+        """Compose QA report from a 422 ErrorEnvelope, if present."""
+        details = self.body.get("details")
+        if not isinstance(details, dict):
+            return None
+        report = details.get("validation_report")
+        return report if isinstance(report, dict) else None
+
+    @property
+    def is_compose_qa_failure(self) -> bool:
+        return self.status_code == 422 and self.validation_report is not None
 
 
 class CreativeAgentClient:
@@ -90,10 +110,31 @@ class CreativeAgentClient:
 
             if response.status_code >= 400:
                 detail = response.text.strip() or response.reason_phrase
+                body: dict[str, Any] = {}
+                try:
+                    parsed = response.json()
+                    if isinstance(parsed, dict):
+                        body = parsed
+                except Exception:  # noqa: BLE001 — keep raw detail on non-JSON errors
+                    body = {}
                 last_error = CreativeAgentApiError(
                     f"{method} {path} failed ({response.status_code}): {detail}",
                     status_code=response.status_code,
+                    body=body,
                 )
+                # Never treat compose QA (422 + validation_report) as a transient HTTP retry.
+                if last_error.is_compose_qa_failure:
+                    log_orchestrator_event(
+                        f"{method} {path} compose QA failed",
+                        level=logging.WARNING,
+                        event_type="compose_qa_failed",
+                        http_method=method,
+                        path=path,
+                        status_code=response.status_code,
+                        correlation_id=correlation_id,
+                        error_count=(last_error.validation_report or {}).get("error_count"),
+                    )
+                    raise last_error
                 if (
                     attempt + 1 < max_attempts
                     and is_transient_third_party_error(detail, status_code=response.status_code)

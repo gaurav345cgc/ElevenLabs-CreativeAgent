@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import json
+from functools import lru_cache
+from pathlib import Path
+
 from tts_pipeline.background_policy.library_catalog import LIBRARY_BED_UPLOADS
 from tts_pipeline.background_policy.schema import BackgroundProfile
 from tts_pipeline.persistence.s3_keys import background_track_key
 
 DEFAULT_BACKGROUND_PROFILE_CODE = "calm_ambient_01"
+_LISTEN_NOTES_PATH = Path(__file__).resolve().parents[1] / "data" / "background_bed_listen_notes.json"
 
 # Shared mix defaults for under-voice beds (speech-forward).
 _DEFAULT_GAIN_DB = -30.0
@@ -86,6 +91,55 @@ def mood_for_code(code: str) -> str:
     return PROFILE_MOODS.get(code, "Meditation-safe looping under-voice bed.")
 
 
+@lru_cache(maxsize=1)
+def _listen_notes_by_code() -> dict[str, dict]:
+    if not _LISTEN_NOTES_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(_LISTEN_NOTES_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    beds = payload.get("beds") if isinstance(payload, dict) else None
+    if not isinstance(beds, dict):
+        return {}
+    return {str(code): note for code, note in beds.items() if isinstance(note, dict)}
+
+
+def listen_notes_for_code(code: str) -> dict | None:
+    return _listen_notes_by_code().get(code)
+
+
+def listen_summary_for_code(code: str) -> str:
+    """Concrete sonic line for the OpenAI selector (falls back to short mood tag)."""
+    notes = listen_notes_for_code(code)
+    if not notes:
+        return mood_for_code(code)
+    # Prefer v2 concrete_summary (objective metrics + strict listen).
+    concrete = str(notes.get("concrete_summary") or "").strip()
+    if concrete:
+        return concrete
+    one = str(notes.get("one_line") or "").strip()
+    distinctive = str(notes.get("distinctive") or "").strip()
+    best = str(notes.get("best_for") or "").strip()
+    avoid = str(notes.get("avoid_when") or "").strip()
+    listen = notes.get("listen") if isinstance(notes.get("listen"), dict) else {}
+    parts = [one or mood_for_code(code)]
+    detail = []
+    if distinctive:
+        detail.append(f"fingerprint={distinctive}")
+    if best:
+        detail.append(f"best_for={best}")
+    if avoid:
+        detail.append(f"avoid_when={avoid}")
+    if listen.get("brightness"):
+        detail.append(f"brightness={listen['brightness']}")
+    if listen.get("low_end"):
+        detail.append(f"low_end={listen['low_end']}")
+    if detail:
+        parts.append("(" + "; ".join(detail) + ")")
+    return " ".join(parts)
+
+
 def catalog_entries() -> list[dict[str, str]]:
     """Approved beds with labels for prompts and Script Hub."""
     return [
@@ -93,6 +147,7 @@ def catalog_entries() -> list[dict[str, str]]:
             "code": code,
             "display_name": display_name_for_code(code),
             "mood": mood_for_code(code),
+            "listen_summary": listen_summary_for_code(code),
             "track_object_key": background_track_key(code),
         }
         for code in sorted(set(LIBRARY_BED_UPLOADS.values()))

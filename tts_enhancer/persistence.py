@@ -7,8 +7,14 @@ from models.duration_budget import copy_duration_budget_metadata
 from models.enums import TranscriptStatus, VersionKind
 from models.messages import EnhancementJobMessage
 from models.metadata import EnhancedVersionMetadata
+from models.records import TranscriptRecord
 from db.repositories import InsertTranscriptVersionInput, TranscriptRepository
 from sqlalchemy.orm import Session
+from tts_pipeline.background_policy import (
+    BACKGROUND_PROFILE_CODE_KEY,
+    BACKGROUND_SELECTION_KEY,
+    select_background_for_script,
+)
 
 
 def persist_agent2_output(
@@ -19,6 +25,7 @@ def persist_agent2_output(
     output: Agent2Output,
     correlation_id: str | None = None,
     source_metadata_json: dict | None = None,
+    transcript: TranscriptRecord | None = None,
 ) -> Agent2Output:
     """Insert ELEVENLABS_ENHANCED version and mark transcript ENHANCED."""
     metadata = EnhancedVersionMetadata(
@@ -35,6 +42,21 @@ def persist_agent2_output(
     if output.sectioned_script is not None:
         content_json["sectioned_script"] = output.sectioned_script.model_dump(mode="json")
 
+    metadata_json = metadata.model_dump(mode="json")
+    # OpenAI picks one of the 28 approved beds from script + wound/pillar taxonomy.
+    tx = transcript or repo.get_transcript(session, output.transcript_id)
+    selection = select_background_for_script(
+        content_text=output.enhanced_full_script,
+        title=metadata.title,
+        content_type=tx.content_type,
+        generation_code=tx.generation_code,
+        wound_id=tx.wound_id,
+        stage_no=tx.stage_no,
+        pillar_code=tx.pillar_code,
+    )
+    metadata_json[BACKGROUND_SELECTION_KEY] = selection
+    metadata_json[BACKGROUND_PROFILE_CODE_KEY] = selection["selected_code"]
+
     repo.insert_transcript_version(
         session,
         InsertTranscriptVersionInput(
@@ -44,7 +66,7 @@ def persist_agent2_output(
             content_text=output.enhanced_full_script,
             content_json=content_json,
             created_by_agent=output.created_by_agent,
-            metadata_json=metadata.model_dump(mode="json"),
+            metadata_json=metadata_json,
             source_version_id=output.source_version_id,
             enhancement_mode=message.requested_output_mode,
         ),
@@ -71,6 +93,8 @@ def persist_agent2_output(
             "raw_version_id": str(output.source_version_id),
             "enhancement_mode": message.requested_output_mode.value,
             "voice_model": message.voice_model,
+            "background_profile_code": selection.get("selected_code"),
+            "background_selected_by": selection.get("selected_by"),
         },
         correlation_id=correlation_id,
     )

@@ -20,7 +20,7 @@ logger = logging.getLogger("creative_agent.tts.background_policy")
 
 BACKGROUND_SELECTION_KEY = "background_selection"
 BACKGROUND_PROFILE_CODE_KEY = "background_profile_code"
-BACKGROUND_SELECTION_PROMPT_VERSION = "bg-select-v1"
+BACKGROUND_SELECTION_PROMPT_VERSION = "bg-select-v3"
 DEFAULT_SELECTOR_MODEL = "gpt-4o-mini"
 DEFAULT_ALTERNATIVE_COUNT = 3
 _SCRIPT_EXCERPT_CHARS = 1600
@@ -163,7 +163,10 @@ def create_background_selection(
     pillar_code: str | None = None,
     client: OpenAIBackgroundSelectorClient | None = None,
 ) -> dict[str, Any]:
+    from tts_pipeline.background_policy.affinity import affinity_for_brief, apply_affinity_rail
+
     planner = client or OpenAIBackgroundSelectorClient()
+    rail = affinity_for_brief(pillar_code=pillar_code, wound_id=wound_id)
     raw = planner.select_background(
         content_text=content_text,
         title=title,
@@ -172,8 +175,104 @@ def create_background_selection(
         wound_id=wound_id,
         stage_no=stage_no,
         pillar_code=pillar_code,
+        preferred_codes=rail.get("preferred") or [],
+        avoid_codes=rail.get("avoid") or [],
     )
-    return parse_background_selection_response(raw, model=planner.model)
+    parsed = parse_background_selection_response(raw, model=planner.model)
+    final_code, rail_note = apply_affinity_rail(
+        str(parsed["selected_code"]),
+        pillar_code=pillar_code,
+        wound_id=wound_id,
+    )
+    if final_code != parsed["selected_code"]:
+        # Snap to rail — keep original pick as first alternative.
+        previous = str(parsed["selected_code"])
+        alts = [
+            _alt_payload(previous, str(parsed.get("reason") or "OpenAI pick before affinity rail.")),
+            *[
+                item
+                for item in (parsed.get("alternatives") or [])
+                if isinstance(item, dict) and str(item.get("code") or "") not in {final_code, previous, ""}
+            ],
+        ][:DEFAULT_ALTERNATIVE_COUNT]
+        parsed = _selection_payload(
+            selected_code=final_code,
+            reason=(
+                f"{parsed.get('reason') or ''} "
+                f"[affinity rail → {final_code}]"
+            ).strip(),
+            alternatives=alts,
+            selected_by="openai_affinity_rail",
+            model=planner.model,
+            openai_reason=parsed.get("openai_reason") or parsed.get("reason"),
+        )
+    parsed["affinity"] = {
+        "preferred": rail.get("preferred") or [],
+        "avoid": rail.get("avoid") or [],
+        "rail_note": rail_note,
+    }
+    return parsed
+
+
+def resolve_bg_selector_mode() -> str:
+    """auto | openai | off — how we pick a catalog bed for a script."""
+    ensure_dotenv_loaded()
+    return (
+        os.environ.get("CREATIVE_AGENT_BG_SELECTOR", "auto").strip().lower() or "auto"
+    )
+
+
+def select_background_for_script(
+    *,
+    content_text: str,
+    title: str | None = None,
+    content_type: str | None = None,
+    generation_code: str | None = None,
+    wound_id: str | None = None,
+    stage_no: int | None = None,
+    pillar_code: str | None = None,
+    client: OpenAIBackgroundSelectorClient | None = None,
+) -> dict[str, Any]:
+    """Pick a catalog bed from script + taxonomy via OpenAI; fall back to default.
+
+    ``CREATIVE_AGENT_BG_SELECTOR``:
+    - ``auto`` (default): OpenAI when a key is available, else catalog default
+    - ``openai``: require OpenAI (still falls back to default on selector errors)
+    - ``off``: always catalog default (``calm_ambient_01``)
+    """
+    mode = resolve_bg_selector_mode()
+    if mode in {"off", "default", "false", "0"}:
+        return default_background_selection()
+
+    use_openai = mode in {"auto", "openai", "on", "true", "1"}
+    if mode == "auto":
+        try:
+            from transcript_composer.llm_config import resolve_openai_api_key
+
+            use_openai = bool(resolve_openai_api_key())
+        except Exception:
+            use_openai = False
+
+    if not use_openai:
+        return default_background_selection()
+
+    try:
+        return create_background_selection(
+            content_text=content_text,
+            title=title,
+            content_type=content_type,
+            generation_code=generation_code,
+            wound_id=wound_id,
+            stage_no=stage_no,
+            pillar_code=pillar_code,
+            client=client,
+        )
+    except Exception as exc:
+        logger.warning(
+            "background OpenAI selector failed; using catalog default: %s",
+            exc,
+        )
+        return default_background_selection()
 
 
 class OpenAIBackgroundSelectorClient:
@@ -213,6 +312,8 @@ class OpenAIBackgroundSelectorClient:
         wound_id: str | None = None,
         stage_no: int | None = None,
         pillar_code: str | None = None,
+        preferred_codes: list[str] | None = None,
+        avoid_codes: list[str] | None = None,
     ) -> dict[str, Any]:
         system, user = build_selector_prompts(
             content_text=content_text,
@@ -222,6 +323,8 @@ class OpenAIBackgroundSelectorClient:
             wound_id=wound_id,
             stage_no=stage_no,
             pillar_code=pillar_code,
+            preferred_codes=preferred_codes,
+            avoid_codes=avoid_codes,
         )
         response = self._create_completion(
             model=self._model,
@@ -252,29 +355,58 @@ def build_selector_prompts(
     wound_id: str | None,
     stage_no: int | None,
     pillar_code: str | None,
+    preferred_codes: list[str] | None = None,
+    avoid_codes: list[str] | None = None,
 ) -> tuple[str, str]:
     catalog_lines = "\n".join(
-        f"- {entry['code']}: {entry['display_name']} — {entry['mood']}"
+        f"- {entry['code']}: {entry['display_name']} — "
+        f"{entry.get('listen_summary') or entry['mood']}"
         for entry in catalog_entries()
     )
     excerpt = (content_text or "").strip()[:_SCRIPT_EXCERPT_CHARS]
+    try:
+        from transcript_composer.theme import generation_label, pillar_label, wound_label
+
+        wound_name = wound_label(wound_id)
+        pillar_name = pillar_label(pillar_code) or "(none)"
+        generation_name = generation_label(generation_code)
+    except Exception:
+        wound_name = wound_id or "(none)"
+        pillar_name = pillar_code or "(none)"
+        generation_name = generation_code or "(none)"
+
+    preferred = [c for c in (preferred_codes or []) if c]
+    avoid = [c for c in (avoid_codes or []) if c]
+    preferred_block = (
+        ", ".join(preferred)
+        if preferred
+        else "(none — use listen notes + script)"
+    )
+    avoid_block = ", ".join(avoid) if avoid else "(none)"
+
     system = f"""You choose ONE background bed from an approved meditation catalog for guided narration.
 
 Rules:
 - Pick only from the provided codes. Never invent a code.
-- Bed plays quietly under a spoken meditation voice — prefer sparse pads over anything that would steal attention.
-- Match emotional register and wound of the script (e.g. sanctuary/safety, earth/body, the_deep/grief, replenish/fatigue).
+- STRONGLY prefer the PREFERRED list for this wound/pillar (ranked best→ok). Only leave it if the script clearly conflicts.
+- Never pick a code from AVOID unless preferred is empty.
+- Catalog lines include concrete LISTEN + LOUDNESS notes — trust measured loudness and brightness/pulse over the display name.
+- Bed must sit quietly under spoken guidance (under_voice_risk no/maybe only).
+- Match wound + pillar labels AND script tone.
 - Return JSON only with keys: selected_code (string), reason (one sentence), alternatives (array of 3 objects: code, reason).
-- alternatives must be different from selected_code and from each other.
+- alternatives must be different from selected_code and from each other; prefer other PREFERRED codes as alternatives.
 - prompt_version={BACKGROUND_SELECTION_PROMPT_VERSION}"""
     user = f"""Title: {title or "(untitled)"}
 content_type: {content_type or "(none)"}
-generation_code: {generation_code or "(none)"}
-wound_id: {wound_id or "(none)"}
+generation: {generation_code or "(none)"} ({generation_name})
+wound: {wound_id or "(none)"} ({wound_name})
 stage_no: {stage_no if stage_no is not None else "(none)"}
-pillar_code: {pillar_code or "(none)"}
+pillar: {pillar_code or "(none)"} ({pillar_name})
 
-Approved catalog:
+PREFERRED beds for this wound/pillar (best first): {preferred_block}
+AVOID beds for this wound/pillar: {avoid_block}
+
+Approved catalog (concrete listen + loudness notes):
 {catalog_lines}
 
 Script excerpt:

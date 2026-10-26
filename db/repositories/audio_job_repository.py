@@ -362,6 +362,31 @@ class AudioJobRepository:
         )
         return _to_audio_job_record(row)
 
+    def mark_job_created_for_retry(
+        self,
+        session: Session,
+        audio_job_id: UUID,
+        *,
+        correlation_id: str | None = None,
+    ) -> TranscriptAudioJobRecord:
+        """Reset a FAILED/PARTIALLY_FAILED job so operator replay can re-plan chunks."""
+        row = session.get(TranscriptAudioJobRow, audio_job_id)
+        if row is None:
+            raise ValueError(f"audio job {audio_job_id} not found")
+        now = _utc_now()
+        row.status = AudioJobStatus.CREATED.value
+        row.last_error = None
+        row.finished_at = None
+        row.updated_at = now
+        session.flush()
+        log_db_event(
+            "transcript_audio_job_retry_reset",
+            audio_job_id=audio_job_id,
+            status=row.status,
+            correlation_id=correlation_id,
+        )
+        return _to_audio_job_record(row)
+
     def archive_completed_jobs_except_transcripts(
         self,
         session: Session,

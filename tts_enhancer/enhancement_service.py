@@ -74,6 +74,7 @@ class EnhancementService:
                     raise
 
                 raw_version = self._load_raw_version(session, message)
+                transcript = self._repository.get_transcript(session, message.transcript_id)
                 sectioned = _load_sectioned_script(raw_version.content_json)
 
                 engine_result = self._engine.enhance(
@@ -104,6 +105,7 @@ class EnhancementService:
                     output=output,
                     correlation_id=correlation_id,
                     source_metadata_json=raw_version.metadata_json,
+                    transcript=transcript,
                 )
         except DuplicateVersionError:
             with session_scope(self._repository._session_factory) as session:

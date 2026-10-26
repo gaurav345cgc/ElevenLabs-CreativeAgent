@@ -4,13 +4,14 @@ from __future__ import annotations
 
 from uuid import uuid4
 
+import pytest
+
 from models.agents import Agent1Output
 from models.metadata import (
     DurationEstimate,
     RawPatternMetadata,
     ScriptSection,
     SectionedScriptContent,
-    SelectedPatternPlan,
     TaxonomyContext,
 )
 from models.requests import CreateTranscriptRequest
@@ -18,6 +19,11 @@ from models.validation import build_example_pattern_plan
 from transcript_composer.composition_service import CompositionService
 from transcript_composer.script_generator import TemplateScriptGenerator
 from transcript_composer.validation import TranscriptValidationError, TranscriptValidator
+
+
+@pytest.fixture(autouse=True)
+def _disable_live_pain_pillar_qa(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("CREATIVE_AGENT_PAIN_PILLAR_QA", "off")
 
 
 def _sample_request(**overrides) -> CreateTranscriptRequest:

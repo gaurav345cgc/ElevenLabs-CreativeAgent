@@ -400,6 +400,67 @@ def _group_satisfied(text_lower: str, group: Iterable[str]) -> bool:
     return bool(_phrase_hits(text_lower, group))
 
 
+def _keyword_group_hit_count(text_lower: str, groups: Iterable[Iterable[str]]) -> int:
+    return sum(1 for group in groups if _group_satisfied(text_lower, group))
+
+
+def _check_fail_if_better_matches(
+    *,
+    product: str,
+    full: str,
+    spec: dict,
+) -> list[ValidationIssue]:
+    """Fail when the script matches a rival First-10 wound as well or better than the target.
+
+    Deterministic floor against cross-wound bleed (no LLM). Rival criteria come only
+    from the relatability pack — never invented.
+    """
+    rivals = spec.get("fail_if_better_matches") or []
+    if not rivals:
+        return []
+
+    from transcript_composer.relatability import entry_by_product_code
+
+    current_groups = list(spec.get("required_keyword_groups") or [])
+    current_hits = _keyword_group_hit_count(full, current_groups)
+    current_total = len(current_groups) or 1
+    issues: list[ValidationIssue] = []
+
+    for rival_code in rivals:
+        rival_entry = entry_by_product_code(str(rival_code))
+        if rival_entry is None:
+            continue
+        rival_product = str(rival_entry.get("product_code") or rival_code).upper()
+        if rival_product == str(product).upper():
+            continue
+        rival_spec = rival_entry.get("validator") or {}
+        rival_groups = list(rival_spec.get("required_keyword_groups") or [])
+        if not rival_groups:
+            continue
+        rival_hits = _keyword_group_hit_count(full, rival_groups)
+        rival_total = len(rival_groups)
+        rival_half = max(1, (rival_total + 1) // 2)
+        rival_complete = rival_hits >= rival_total
+        current_incomplete = current_hits < current_total
+
+        better = rival_hits > current_hits and rival_hits >= rival_half
+        equal_complete = rival_complete and rival_hits >= current_hits and rival_total >= 2
+        complete_while_target_weak = rival_complete and current_incomplete
+
+        if better or equal_complete or complete_while_target_weak:
+            issues.append(
+                _issue(
+                    "relatability_better_match",
+                    f"relatability pack {product}: script matches rival {rival_product} "
+                    f"as well or better ({rival_hits}/{rival_total} rival keyword groups vs "
+                    f"{current_hits}/{current_total} for target)",
+                    severity=ValidationSeverity.ERROR,
+                    source="relatability",
+                )
+            )
+    return issues
+
+
 def check_relatability_pack(
     request: CreateTranscriptRequest,
     sectioned: SectionedScriptContent,
@@ -498,6 +559,7 @@ def check_relatability_pack(
                 )
             )
 
+    issues.extend(_check_fail_if_better_matches(product=str(product), full=full, spec=spec))
     return issues
 
 

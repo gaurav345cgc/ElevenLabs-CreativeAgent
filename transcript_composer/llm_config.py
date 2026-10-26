@@ -73,6 +73,17 @@ def resolve_validation_mode() -> str:
     return os.environ.get("CREATIVE_AGENT_TRANSCRIPT_VALIDATOR", "auto").strip().lower() or "auto"
 
 
+def resolve_pain_pillar_qa_mode() -> str:
+    """auto | on | off — grounded pain+pillar LLM judge after compose.
+
+    auto = on when an OpenAI API key is available; otherwise skip.
+    """
+    ensure_dotenv_loaded()
+    return (
+        os.environ.get("CREATIVE_AGENT_PAIN_PILLAR_QA", "auto").strip().lower() or "auto"
+    )
+
+
 def _load_api_key_from_secrets_manager(secret_arn: str) -> str:
     import boto3
 

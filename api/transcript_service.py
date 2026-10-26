@@ -49,9 +49,8 @@ from tts_pipeline.background_policy import (
     BACKGROUND_SELECTION_KEY,
     BackgroundPolicyError,
     apply_reviewer_background_choice,
-    create_background_selection,
-    default_background_selection,
     load_background_selection,
+    select_background_for_script,
 )
 from tts_pipeline.voice_policy import DEFAULT_VOICE_PROFILE_CODE
 from api.audio_service import AudioJobApiService
@@ -267,13 +266,36 @@ class TranscriptApiService:
         )
         persist = True
         if existing is None:
-            # Default catalog bed on first open — OpenAI selector is too slow for Script Hub.
-            existing = default_background_selection()
+            # OpenAI picks from the 28-bed catalog using script + wound/pillar;
+            # falls back to calm_ambient_01 when selector is off or unavailable.
+            source = next(
+                (
+                    version
+                    for version in reversed(eligible)
+                    if (version.content_text or "").strip()
+                ),
+                eligible[-1],
+            )
+            title = None
+            if isinstance(source.metadata_json, dict):
+                raw_title = source.metadata_json.get("title")
+                if isinstance(raw_title, str) and raw_title.strip():
+                    title = raw_title.strip()
+            existing = select_background_for_script(
+                content_text=source.content_text or "",
+                title=title,
+                content_type=transcript.content_type,
+                generation_code=transcript.generation_code,
+                wound_id=transcript.wound_id,
+                stage_no=transcript.stage_no,
+                pillar_code=transcript.pillar_code,
+            )
             log_api_event(
-                "background selection defaulted for script hub",
-                event_type="background_selection_defaulted",
+                "background selection attached for script hub",
+                event_type="background_selection_attached",
                 transcript_id=str(transcript.id),
                 selected_code=existing.get("selected_code"),
+                selected_by=existing.get("selected_by"),
             )
 
         updated: dict = {version.id: version for version in versions}

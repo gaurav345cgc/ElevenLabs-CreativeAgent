@@ -6,7 +6,13 @@ from typing import Any
 
 from models.duration_budget import copy_duration_budget_metadata
 from models.records import TranscriptRecord, TranscriptVersionRecord
-from tts_pipeline.background_policy import copy_background_metadata
+from tts_pipeline.background_policy import (
+    BACKGROUND_PROFILE_CODE_KEY,
+    BACKGROUND_SELECTION_KEY,
+    copy_background_metadata,
+    load_background_selection,
+    select_background_for_script,
+)
 
 
 def build_audio_job_metadata(
@@ -17,10 +23,31 @@ def build_audio_job_metadata(
     correlation_id: str | None = None,
 ) -> dict[str, Any]:
     version_meta = transcript_version.metadata_json or {}
+    background_meta = copy_background_metadata(version_meta)
+    # Safety net for older enhanced versions that predate AI bed selection.
+    if load_background_selection(background_meta) is None:
+        title = None
+        if isinstance(version_meta, dict):
+            raw_title = version_meta.get("title")
+            if isinstance(raw_title, str) and raw_title.strip():
+                title = raw_title.strip()
+        selection = select_background_for_script(
+            content_text=transcript_version.content_text or "",
+            title=title,
+            content_type=transcript.content_type,
+            generation_code=transcript.generation_code,
+            wound_id=transcript.wound_id,
+            stage_no=transcript.stage_no,
+            pillar_code=transcript.pillar_code,
+        )
+        background_meta = {
+            BACKGROUND_SELECTION_KEY: selection,
+            BACKGROUND_PROFILE_CODE_KEY: selection["selected_code"],
+        }
     # Top-level duration fields so PlanPauses resolves wall-clock without digging.
     metadata: dict[str, Any] = {
         **copy_duration_budget_metadata(version_meta),
-        **copy_background_metadata(version_meta),
+        **background_meta,
         "traceability": {
             "transcript": {
                 "content_type": transcript.content_type,
